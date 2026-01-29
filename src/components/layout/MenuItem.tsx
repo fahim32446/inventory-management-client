@@ -83,7 +83,7 @@ export const MenuItem = ({
             className={cn(
               'absolute left-0 top-0 w-px',
               isLastChild ? (compactMode ? 'h-4' : 'h-6') : 'bottom-0',
-              isLightSidebar ? 'bg-linear-to-b bg-gray-200' : 'bg-linear-to-b bg-gray-700'
+              isLightSidebar ? 'bg-linear-to-b bg-gray-200' : 'bg-linear-to-b bg-gray-700',
             )}
             style={{ left: `${level * 1.5 - 0.1}rem` }}
           />
@@ -91,7 +91,7 @@ export const MenuItem = ({
             className={cn(
               compactMode ? 'top-4' : 'top-6',
               'absolute w-4 h-px',
-              isLightSidebar ? 'bg-gray-200' : 'bg-gray-700'
+              isLightSidebar ? 'bg-gray-200' : 'bg-gray-700',
             )}
             style={{ left: `${level * 1.5 - 0.1}rem` }}
           />
@@ -113,8 +113,8 @@ export const MenuItem = ({
           isActive
             ? 'text-white border-l-4'
             : isLightSidebar
-            ? 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
-            : 'text-gray-400 hover:bg-gray-800/50 hover:text-white'
+              ? 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+              : 'text-gray-400 hover:bg-gray-800/50 hover:text-white',
         )}
         style={{
           paddingLeft: !collapsed && level > 0 ? `${1 + level * 1.5}rem` : undefined,
@@ -122,7 +122,7 @@ export const MenuItem = ({
           background: isActive
             ? `linear-gradient(90deg, ${hexToRgba(primaryColor, 0.2)} 0%, ${hexToRgba(
                 primaryColor,
-                0.05
+                0.05,
               )} 100%)`
             : undefined,
           borderColor: isActive ? primaryColor : 'transparent',
@@ -130,20 +130,10 @@ export const MenuItem = ({
         }}
         title={collapsed ? item.label : undefined}
       >
-        {isActive && (
-          <div
-            className={cn(
-              'absolute rounded-r-full',
-              collapsed ? 'left-0 top-2 bottom-2 w-1' : 'left-0 top-0 bottom-0 w-0.5'
-            )}
-            style={{ backgroundColor: primaryColor }}
-          />
-        )}
-
         <div
           className={cn(
             'flex items-center gap-3',
-            collapsed ? 'justify-center flex-col gap-0.5' : 'flex-1'
+            collapsed ? 'justify-center flex-col gap-0.5' : 'flex-1',
           )}
         >
           {Icon && (
@@ -154,8 +144,8 @@ export const MenuItem = ({
                 isActive
                   ? ''
                   : isLightSidebar
-                  ? 'text-gray-800 group-hover:text-gray-700'
-                  : 'text-gray-50 group-hover:text-white'
+                    ? 'text-gray-800 group-hover:text-gray-700'
+                    : 'text-gray-50 group-hover:text-white',
               )}
               style={{ color: isActive ? primaryColor : undefined }}
             />
@@ -164,14 +154,14 @@ export const MenuItem = ({
           {/* {!collapsed && ( */}
           <span
             className={cn(
-              collapsed ? 'w-[70px] pl-1 text-xs!' : '',
+              collapsed ? 'w-17.5 pl-1 text-xs!' : '',
               compactMode ? 'text-xs' : 'text-sm',
               'font-medium transition-colors duration-200 truncate',
               isActive
                 ? ''
                 : isLightSidebar
-                ? 'text-gray-800 group-hover:text-gray-900'
-                : 'text-gray-50 group-hover:text-white'
+                  ? 'text-gray-800 group-hover:text-gray-900'
+                  : 'text-gray-50 group-hover:text-white',
             )}
             style={{ color: isActive ? primaryColor : undefined }}
           >
@@ -188,7 +178,7 @@ export const MenuItem = ({
                 className={cn(
                   isLightSidebar
                     ? 'text-gray-400 group-hover:text-gray-600'
-                    : 'text-gray-400 group-hover:text-white'
+                    : 'text-gray-400 group-hover:text-white',
                 )}
               />
             </motion.div>
@@ -246,19 +236,21 @@ export const MenuItem = ({
             <div
               className={cn(
                 'border rounded-lg shadow-xl w-56 overflow-hidden',
-                isLightSidebar ? 'bg-white border-gray-200' : 'bg-slate-900 border-slate-700'
+                isLightSidebar ? 'bg-white border-gray-200' : 'bg-slate-900 border-slate-700',
               )}
             >
               <div
                 className={cn(
                   'px-4 py-3 border-b',
-                  isLightSidebar ? 'bg-gray-50 border-gray-100' : 'bg-slate-950/50 border-slate-800'
+                  isLightSidebar
+                    ? 'bg-gray-50 border-gray-100'
+                    : 'bg-slate-950/50 border-slate-800',
                 )}
               >
                 <span
                   className={cn(
                     'text-sm font-semibold',
-                    isLightSidebar ? 'text-gray-800' : 'text-white'
+                    isLightSidebar ? 'text-gray-800' : 'text-white',
                   )}
                 >
                   {item.label}
@@ -287,7 +279,7 @@ export const MenuItem = ({
               )}
             </div>
           </div>,
-          document.body
+          document.body,
         )}
     </div>
   );

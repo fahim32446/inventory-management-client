@@ -188,7 +188,7 @@ const AppSidebar = ({ collapsed, setCollapsed, isMobile }: AppSidebarProps) => {
                       : 'bg-linear-to-r from-blue-400 to-sky-400',
                   )}
                 >
-                  INVENTORY 360 
+                  INVENTORY 360
                 </h1>
               </div>
             </div>

@@ -8,6 +8,7 @@ export interface ILoginResponse {
   success: boolean;
   message: string;
   data: ILoginData | null;
+  accessToken: string | null;
 }
 
 export interface ILoginData {
@@ -17,8 +18,9 @@ export interface ILoginData {
   email: string;
   two_fa?: boolean;
   type: string;
-  accessToken: string;
   role: IRole;
+  phone_number?: string;
+  photo?: string;
 }
 
 export interface IRole {
@@ -33,13 +35,13 @@ export interface IRole {
 
 export interface ISendEmailVerificationBody {
   email: string;
-  type: "reset_admin" | "reset_employee";
+  type: 'reset_admin' | 'reset_employee';
 }
 
 export interface IMatchOTPVerificationBody {
   email: string;
   otp: string;
-  type: "reset_admin" | "reset_employee";
+  type: 'reset_admin' | 'reset_employee';
 }
 
 export interface IMatchOTPResponse {

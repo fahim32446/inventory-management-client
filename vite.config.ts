@@ -18,12 +18,12 @@ export default defineConfig({
     port: 6565,
     // open: true,
     strictPort: false,
-    proxy: {
-      '/api': {
-        target: 'http://10.10.220.23:9092',
-        changeOrigin: true,
-        secure: false,
-      },
-    },
+    // proxy: {
+    //   '/api': {
+    //     target: 'http://10.10.220.23:9092',
+    //     changeOrigin: true,
+    //     secure: false,
+    //   },
+    // },
   },
 });

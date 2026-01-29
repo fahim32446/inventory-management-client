@@ -74,11 +74,6 @@ export default function DashboardLayout() {
       icon: <UserOutlined />,
     },
     {
-      key: '2',
-      label: 'Settings',
-      icon: <SettingOutlined />,
-    },
-    {
       key: '3',
       label: 'Appearance',
       icon: <HighlightOutlined />,
@@ -159,11 +154,11 @@ export default function DashboardLayout() {
                 className='text-gray-500 dark:text-gray-400'
               />
             </Tooltip>
-            <Tooltip title="Sticky note">
-              <Button 
-                type="text" 
-                shape="circle" 
-                icon={<AccountBookOutlined />} 
+            <Tooltip title='Sticky note'>
+              <Button
+                type='text'
+                shape='circle'
+                icon={<AccountBookOutlined />}
                 onClick={() => setIsStickyNotesOpen(true)}
                 className={isStickyNotesOpen ? 'text-blue-600 bg-blue-50 dark:bg-blue-900/20' : ''}
               />
@@ -195,10 +190,7 @@ export default function DashboardLayout() {
         </QueryParamProvider>
       </Layout>
       {/* Sticky Notes Manager */}
-      <StickyNotesManager 
-        isOpen={isStickyNotesOpen} 
-        onClose={() => setIsStickyNotesOpen(false)} 
-      />
+      <StickyNotesManager isOpen={isStickyNotesOpen} onClose={() => setIsStickyNotesOpen(false)} />
     </Layout>
   );
 }

@@ -18,6 +18,8 @@ import EditSale from './features/sale/page/EditSale';
 import Users from './features/administration/pages/Users';
 import RoleList from './features/administration/pages/RoleList';
 import ManageRole from './features/administration/pages/ManageRole';
+import Profile from './features/auth/pages/Profile';
+import ForgotPasswordPage from './features/auth/pages/ForgotPasswordPage';
 
 export const router = createBrowserRouter([
   {
@@ -33,8 +35,12 @@ export const router = createBrowserRouter([
         element: <LoginPage />,
       },
       {
+        path: 'forgot-password',
+        element: <ForgotPasswordPage />,
+      },
+      {
         path: 'login', // Backward compatibility / redirect
-        element: <Navigate to="/auth/login" replace />,
+        element: <Navigate to='/auth/login' replace />,
       },
       // Keep other public routes if needed, otherwise just what user asked
     ],
@@ -50,17 +56,22 @@ export const router = createBrowserRouter([
     children: [
       {
         path: 'accounts',
-        element: <Navigate to="/dashboard" replace />,
+        element: <Navigate to='/dashboard' replace />,
       },
       {
         index: true,
-        element: <Navigate to="/dashboard" replace />,
+        element: <Navigate to='/dashboard' replace />,
       },
       {
         path: 'dashboard',
         element: <DashboardAccount />, // Mapping <Dashboard /> to existing DashboardAccount
       },
-      
+
+      {
+        path: 'profile',
+        element: <Profile />, // <Profile />
+      },
+
       // Products
       {
         path: 'products',
@@ -70,31 +81,31 @@ export const router = createBrowserRouter([
         path: 'products/add',
         element: <AddProduct />, // <AddProduct />
       },
-      
+
       // Category
       {
         path: 'category',
         element: <CategoryList />, // <CategoryList />
       },
-      
+
       // Warehouse
       {
         path: 'warehouse',
         element: <WarehouseList />, // <WarehouseList />
       },
-      
+
       // Suppliers
       {
         path: 'suppliers',
         element: <SuppliersList />, // <SuppliersList />
       },
-      
+
       // Purchase
       {
         path: 'purchase',
         element: <PurchaseList />, // <PurchaseList />
       },
-      
+
       // Sale
       {
         path: 'sale',
@@ -107,59 +118,58 @@ export const router = createBrowserRouter([
       {
         path: 'sale/edit/:saleId',
         element: <EditSale />, // <EditSale />
-      },  
-      
+      },
+
       // Report
       {
         path: 'report',
         children: [
-            {
-                index: true, // /report
-                element: <Navigate to="sales" replace /> // Redirect to first child? Or ComingSoon
-            },
-            {
-                path: 'sales',
-                element: <ComingSoon />, // <SalesReport />
-            },
-            {
-                path: 'stock',
-                element: <ComingSoon />, // <StockReport />
-            }
-        ]
+          {
+            index: true, // /report
+            element: <Navigate to='sales' replace />, // Redirect to first child? Or ComingSoon
+          },
+          {
+            path: 'sales',
+            element: <ComingSoon />, // <SalesReport />
+          },
+          {
+            path: 'stock',
+            element: <ComingSoon />, // <StockReport />
+          },
+        ],
       },
 
       // Administration
       {
         path: 'administration',
         children: [
-            {
+          {
+            index: true,
+            element: <Navigate to='users' replace />,
+          },
+          {
+            path: 'users',
+            element: <Users />, // <Users />
+          },
+          {
+            path: 'role',
+            children: [
+              {
                 index: true,
-                element: <Navigate to="users" replace />
-            },
-            {
-                path: 'users',
-                element: <Users />, // <Users />
-            },
-            {
-                path: 'role',
-                children: [
-                    {
-                        index: true,
-                        element: <RoleList /> // <RoleList /> (path /administration/role)
-                    },
-                    {
-                        path: 'create',
-                        element: <ManageRole /> // <ManageRole />
-                    },
-                    {
-                        path: 'update/:roleId',
-                        element: <ManageRole /> // <ManageRole />
-                    }
-                ]
-            }
-        ]
+                element: <RoleList />, // <RoleList /> (path /administration/role)
+              },
+              {
+                path: 'create',
+                element: <ManageRole />, // <ManageRole />
+              },
+              {
+                path: 'update/:roleId',
+                element: <ManageRole />, // <ManageRole />
+              },
+            ],
+          },
+        ],
       },
     ],
   },
 ]);
-

@@ -91,7 +91,7 @@ export default function ForgotPasswordPage() {
               <div className='w-6 h-6 bg-white rounded-md rotate-45' />
             </div>
             <Title level={2} style={{ color: 'white', margin: 0 }}>
-              INVENTORY 360ICT
+              INVENTORY 360
             </Title>
           </div>
 

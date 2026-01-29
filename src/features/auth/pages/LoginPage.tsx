@@ -1,4 +1,4 @@
-import { Button, Checkbox, Form, Input, Typography } from 'antd';
+import { Button, Checkbox, Form, Input, message, Typography } from 'antd';
 import { BroadcastChannel } from 'broadcast-channel';
 import { motion } from 'framer-motion';
 import { ArrowLeft, ArrowRight, Lock, Mail, ShieldCheck } from 'lucide-react';
@@ -36,6 +36,7 @@ export default function LoginPage() {
         .then(() => {
           navigate(from, { replace: true });
         });
+
       return;
     }
 
@@ -51,6 +52,9 @@ export default function LoginPage() {
         } else {
           navigate(from, { replace: true });
         }
+      })
+      .catch((e) => {
+        message.error(e?.data?.message || 'Login failed. Please try again.');
       });
   };
 
@@ -112,7 +116,7 @@ export default function LoginPage() {
                 <div className='w-6 h-6 bg-white rounded-md rotate-45' />
               </div>
               <Title level={2} style={{ color: 'white', margin: 0, letterSpacing: '-0.02em' }}>
-                INVENTORY 360ICT
+                INVENTORY 360
               </Title>
             </div>
 
@@ -120,7 +124,7 @@ export default function LoginPage() {
               The Intelligence <br /> Behind Your Business
             </h1>
             <p className='text-xl text-blue-100/80 max-w-lg mb-12 font-light leading-relaxed'>
-              Seamlessly manage your enterprise resources with our next-generation  platform.
+              Seamlessly manage your enterprise resources with our next-generation platform.
               Real-time data, intuitive design, and powerful automation.
             </p>
 
@@ -152,7 +156,7 @@ export default function LoginPage() {
                 <div className='w-5 h-5 bg-white rounded-sm rotate-45' />
               </div>
               <Title level={3} style={{ margin: 0 }}>
-                INVENTORY 360ICT
+                INVENTORY 360
               </Title>
             </div>
             <Title level={2} className='font-extrabold! mb-2!'>

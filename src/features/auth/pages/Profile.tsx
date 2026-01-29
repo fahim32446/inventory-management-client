@@ -1,7 +1,16 @@
-import { LoginOutlined } from '@ant-design/icons';
-import { Avatar, Button, Card, Col, Form, Input, Row, Switch, Tabs, Typography } from 'antd';
+import { Avatar, Button, Card, Col, Form, Input, Row, Switch, Typography } from 'antd';
 import { motion } from 'framer-motion';
-import { CheckCircle2, Key, Mail, Phone, ShieldCheck, User } from 'lucide-react';
+import {
+  AlertCircle,
+  CheckCircle2,
+  Key,
+  Lock,
+  LogOut,
+  Mail,
+  Phone,
+  ShieldCheck,
+  User,
+} from 'lucide-react';
 import { useEffect } from 'react';
 import Loading from '../../../components/common/loading';
 import { cn } from '../../../utils/cn';
@@ -29,10 +38,8 @@ const Profile = () => {
   useEffect(() => {
     if (profileData) {
       profileForm.setFieldsValue({
-        username: profileData.username,
         name: profileData.name,
         email: profileData.email,
-        phone_number: profileData.phone_number,
       });
     }
   }, [profileData, profileForm]);
@@ -75,140 +82,291 @@ const Profile = () => {
     visible: { opacity: 1, x: 0 },
   };
 
+  const cardVariants = {
+    hidden: { opacity: 0, scale: 0.95 },
+    visible: { opacity: 1, scale: 1, transition: { duration: 0.3 } },
+  };
+
   return (
     <motion.div
       initial='hidden'
       animate='visible'
       variants={containerVariants}
-      className='p-2 md:px-8 max-w-7xl mx-auto space-y-8'
+      className='min-h-screen p-2 md:px-8 max-w-7xl mx-auto space-y-8 dark:from-slate-950 dark:to-slate-900'
     >
-      {/* Header Section with Cover and Overlapping Avatar */}
-      <section className='relative'>
-        <div className='h-48 md:h-64 w-full rounded bg-linear-to-r from-blue-600 to-indigo-700 overflow-hidden relative shadow-lg'>
-          <div className='absolute inset-0  opacity-20'></div>
-          <div className='absolute inset-0 bg-black/10'></div>
+      {/* Premium Header Section */}
+      <motion.section variants={itemVariants} className='relative'>
+        <div className='absolute inset-0 -z-10'>
+          <div className='absolute top-0 right-0 w-80 h-80 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob'></div>
+          <div className='absolute top-0 -left-4 w-72 h-72 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000'></div>
         </div>
 
-        <div className='px-6 md:px-12 -mt-16 md:-mt-20 flex flex-col md:flex-row items-end gap-6 relative z-10'>
-          <div className='relative group'>
-            <Avatar
-              size={{ xs: 100, sm: 120, md: 160, lg: 160, xl: 160, xxl: 160 }}
-              src={profileData?.photo}
-              icon={<User />}
-              className='border-8 border-white shadow-2xl bg-gray-100'
-            />
-            <div className='absolute bottom-4 right-4 h-6 w-6 rounded-full bg-green-500 border-4 border-white shadow-sm ring-2 ring-green-100 animate-pulse'></div>
-          </div>
+        <Card
+          className='border-0  bg-linear-to-br from-white via-blue-50 to-indigo-50 dark:from-slate-800 dark:via-slate-800 dark:to-slate-800 overflow-hidden'
+          styles={{ body: { padding: 32 } }}
+        >
+          <div className='flex flex-col md:flex-row items-center gap-8'>
+            {/* Avatar Section */}
+            <motion.div variants={cardVariants} className='relative shrink-0'>
+              <div className='relative'>
+                <Avatar
+                  size={{ xs: 100, sm: 120, md: 140, lg: 140, xl: 140, xxl: 140 }}
+                  src={profileData?.photo}
+                  icon={<User />}
+                  className='border-8 border-white  bg-linear-to-br from-blue-100 to-indigo-100'
+                />
+                <div className='absolute bottom-3 right-3 flex items-center gap-1 bg-white px-3 py-1 rounded-full shadow-lg'>
+                  <div className='w-3 h-3 rounded-full bg-emerald-500 animate-pulse'></div>
+                  <Text className='text-xs font-semibold text-gray-700'>Online</Text>
+                </div>
+              </div>
+            </motion.div>
 
-          <div className='flex-1 pb-2 text-center md:text-left'>
-            <Title level={1} className='mb-0! text-3xl! md:text-4xl! font-bold'>
-              {profileData?.name}
-            </Title>
-            <div className='flex items-center justify-center md:justify-start gap-2 mt-1'>
-              <Text className='text-gray-500 font-medium'>@{profileData?.username}</Text>
-              <span className='h-1 w-1 rounded-full bg-gray-300'></span>
-              <Text className='text-primary font-semibold'>{profileData?.role.role_name}</Text>
-            </div>
-          </div>
-
-          <div className='flex gap-3 mb-2 w-full md:w-auto'>
-            <Button
-              type='primary'
-              size='large'
-              icon={<CheckCircle2 size={18} />}
-              className='rounded-2xl bg-primary hover:bg-primary-hover border-none shadow-md px-8 flex-1 md:flex-initial'
-            >
-              Verified Account
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      <Row gutter={[32, 32]}>
-        <Col xs={24} lg={8}>
-          <motion.div variants={itemVariants} className='space-y-6!'>
-            <Card
-              size='small'
-              className='shadow-sm border-gray-100 bg-linear-to-br from-gray-900 to-gray-800 text-white border-none'
-            >
-              <div>
-                <Title level={5} className='dark:text-white! mb-6 flex items-center gap-2'>
-                  <div className='p-2 bg-white/10 rounded-xl'>
-                    <ShieldCheck size={18} />
+            {/* Profile Info Section */}
+            <motion.div variants={itemVariants} className='flex-1 text-center md:text-left'>
+              <div className='space-y-4'>
+                <div>
+                  <Title
+                    level={2}
+                    className='mb-1! text-3xl! md:text-4xl! font-bold bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent'
+                  >
+                    {profileData?.name}
+                  </Title>
+                  <div className='flex items-center justify-center md:justify-start gap-3 mt-2'>
+                    <div className='h-1.5 w-12 rounded-full bg-linear-to-r from-blue-500 to-indigo-500'></div>
+                    <span className='text-sm font-semibold px-4 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full'>
+                      {profileData?.role.role_name}
+                    </span>
+                    <CheckCircle2 size={18} className='text-emerald-500' />
                   </div>
-                  Security Status
+                </div>
+
+                <div className='flex flex-col md:flex-row gap-4 text-gray-600 dark:text-gray-300'>
+                  <div className='flex items-center gap-2'>
+                    <Mail size={16} className='text-blue-500' />
+                    <Text>{profileData?.email}</Text>
+                  </div>
+                  <div className='hidden md:block h-6 w-px bg-gray-200 dark:bg-gray-700'></div>
+                  <div className='flex items-center gap-2'>
+                    <Phone size={16} className='text-indigo-500' />
+                    <Text>{profileData?.phone_number || 'Not provided'}</Text>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </Card>
+      </motion.section>
+
+      {/* Two-Factor Authentication Prominent Section */}
+      <motion.section variants={itemVariants}>
+        <Card
+          className={cn(
+            'border-0  transition-all duration-300 overflow-hidden',
+            profileData?.two_fa
+              ? 'bg-linear-to-br from-emerald-50 to-teal-50 dark:from-emerald-950 dark:to-teal-950'
+              : 'bg-linear-to-br from-red-50 to-orange-50 dark:from-red-950 dark:to-orange-950',
+          )}
+          styles={{ body: { padding: 0 } }}
+        >
+          <div className='flex flex-col md:flex-row items-center justify-between p-8 md:p-10'>
+            <div className='flex items-center gap-6 flex-1'>
+              <motion.div
+                animate={{ rotate: profileData?.two_fa ? [0, 5, -5, 0] : 0 }}
+                transition={{ duration: 2, repeat: Infinity }}
+                className={cn(
+                  'p-4 rounded-2xl shadow-lg',
+                  profileData?.two_fa ? 'bg-emerald-500' : 'bg-red-500',
+                )}
+              >
+                <ShieldCheck size={32} className='text-white' />
+              </motion.div>
+
+              <div className='flex-1'>
+                <Title level={3} className='mb-2! font-bold'>
+                  Two-Factor Authentication
                 </Title>
-                <div className='space-y-4'>
-                  <div
+                <div className='flex items-center gap-2'>
+                  <span
                     className={cn(
-                      'flex items-center justify-between p-3 bg-red-300/30! rounded',
-                      profileData?.two_fa ? 'bg-green-300/30!' : ''
+                      'inline-block px-3 py-1 rounded-full text-sm font-semibold',
+                      profileData?.two_fa
+                        ? 'bg-emerald-200 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200'
+                        : 'bg-red-200 dark:bg-red-900 text-red-800 dark:text-red-200',
                     )}
                   >
-                    <div className='flex items-center gap-3'>
-                      <ShieldCheck className='text-green-400' size={20} />
-                      <Text className='dark:text-white! font-medium'>Two-Factor Auth</Text>
-                    </div>
-                    <Switch
-                      checked={profileData?.two_fa}
-                      onChange={onToggle2FA}
-                      loading={isToggling2FA}
-                      className='bg-gray-700 [&.ant-switch-checked]:bg-green-500'
-                    />
+                    {profileData?.two_fa ? '✓ ENABLED' : '✗ DISABLED'}
+                  </span>
+                  <Text className='text-gray-600 dark:text-gray-400'>
+                    {profileData?.two_fa
+                      ? 'Your account is protected with 2FA'
+                      : 'Enhance your account security'}
+                  </Text>
+                </div>
+              </div>
+            </div>
+
+            <motion.div variants={cardVariants} className='mt-6 md:mt-0 flex items-center gap-4'>
+              <Switch
+                checked={profileData?.two_fa}
+                onChange={onToggle2FA}
+                loading={isToggling2FA}
+                className={cn(
+                  'transition-all',
+                  profileData?.two_fa
+                    ? '[&.ant-switch]:bg-emerald-500'
+                    : '[&.ant-switch]:bg-red-500',
+                )}
+              />
+            </motion.div>
+          </div>
+        </Card>
+      </motion.section>
+
+      <Row gutter={[32, 32]}>
+        {/* Left Sidebar - Profile Information */}
+        <Col xs={24} lg={8}>
+          <motion.div variants={itemVariants} className='space-y-6!'>
+            {/* Profile Info Card */}
+            <Card
+              className='border-0 transition-shadow duration-300 bg-white dark:bg-slate-800'
+              styles={{ body: { padding: 24 } }}
+            >
+              <div className='space-y-6'>
+                <div className='flex items-center gap-3 pb-4 border-b border-gray-100 dark:border-gray-700'>
+                  <div className='p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg'>
+                    <User size={20} className='text-blue-600 dark:text-blue-400' />
+                  </div>
+                  <Title level={4} className='mb-0! font-bold'>
+                    Profile Information
+                  </Title>
+                </div>
+
+                {/* Full Name */}
+                <div className='space-y-2'>
+                  <Text className='text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 tracking-wide'>
+                    Full Name
+                  </Text>
+                  <div className='p-3 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-slate-700 dark:to-slate-800 rounded-lg border border-gray-200 dark:border-slate-600'>
+                    <Text className='font-semibold text-gray-900 dark:text-white text-lg'>
+                      {profileData?.name || 'N/A'}
+                    </Text>
+                  </div>
+                </div>
+
+                {/* Email */}
+                <div className='space-y-2'>
+                  <Text className='text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 tracking-wide'>
+                    Email Address
+                  </Text>
+                  <div className='p-3 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-slate-700 dark:to-slate-800 rounded-lg border border-gray-200 dark:border-slate-600 flex items-center gap-2'>
+                    <Mail size={16} className='text-blue-500 flex-shrink-0' />
+                    <Text className='font-medium text-gray-700 dark:text-gray-300 text-sm truncate'>
+                      {profileData?.email || 'N/A'}
+                    </Text>
+                  </div>
+                </div>
+
+                {/* Phone */}
+                <div className='space-y-2'>
+                  <Text className='text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 tracking-wide'>
+                    Phone Number
+                  </Text>
+                  <div className='p-3 bg-linear-to-br from-gray-50 to-gray-100 dark:from-slate-700 dark:to-slate-800 rounded-lg border border-gray-200 dark:border-slate-600 flex items-center gap-2'>
+                    <Phone size={16} className='text-indigo-500 shrink-0' />
+                    <Text className='font-medium text-gray-700 dark:text-gray-300 text-sm'>
+                      {profileData?.phone_number || 'Not provided'}
+                    </Text>
+                  </div>
+                </div>
+
+                {/* Role */}
+                <div className='space-y-2'>
+                  <Text className='text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 tracking-wide'>
+                    Account Role
+                  </Text>
+                  <div className='p-3 bg-linear-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg border border-blue-200 dark:border-blue-800 flex items-center gap-2'>
+                    <CheckCircle2 size={16} className='text-blue-600 dark:text-blue-400 shrink-0' />
+                    <Text className='font-semibold text-blue-700 dark:text-blue-300'>
+                      {profileData?.role.role_name}
+                    </Text>
                   </div>
                 </div>
               </div>
             </Card>
+
+            {/* Security Status Card */}
             <Card
-              size='small'
-              className='shadow-sm border-gray-100 bg-linear-to-br from-gray-900 to-gray-800 text-white border-none'
+              className='border-0  transition-shadow duration-300 bg-white dark:bg-slate-800'
+              styles={{ body: { padding: 24 } }}
             >
-              <div>
-                <Title
-                  level={5}
-                  className='flex items-center gap-3 text-gray-800 dark:text-gray-100'
-                >
-                  <div
-                    className='flex h-9 w-9 items-center justify-center rounded-xl 
-                   bg-blue-50 text-blue-600 
-                   dark:bg-blue-900/30 dark:text-blue-400'
-                  >
-                    <User size={18} />
+              <div className='space-y-4'>
+                <div className='flex items-center gap-3 pb-4 border-b border-gray-100 dark:border-gray-700'>
+                  <div className='p-2 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg'>
+                    <Lock size={20} className='text-emerald-600 dark:text-emerald-400' />
                   </div>
-                  <span className='font-semibold tracking-wide'>About Me</span>
-                </Title>
+                  <Title level={4} className='mb-0! font-bold'>
+                    Security Status
+                  </Title>
+                </div>
 
-                <div className='space-y-4'>
-                  {/* Full Name */}
-                  <div className='flex flex-col gap-1'>
-                    <Text className='text-xs font-semibold uppercase  text-gray-500 dark:text-gray-400'>
-                      Full Name
-                    </Text>
-                    <Text className='text-base font-medium text-gray-800 dark:text-gray-100'>
-                      {profileData?.name || 'N/A'}
-                    </Text>
-                  </div>
-
-                  {/* Email */}
-                  <div className='flex flex-col gap-1'>
-                    <Text className='text-xs font-semibold uppercase  text-gray-500 dark:text-gray-400'>
-                      Email Address
-                    </Text>
-                    <div className='flex items-center gap-2 text-gray-700 dark:text-gray-200'>
-                      <Mail size={14} className='text-gray-400 dark:text-gray-500' />
-                      <Text className='text-sm font-medium'>{profileData?.email || 'N/A'}</Text>
+                <div className='space-y-3'>
+                  <div className='flex items-start gap-3 p-3 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800'>
+                    <CheckCircle2
+                      size={18}
+                      className='text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-0.5'
+                    />
+                    <div>
+                      <Text className='font-semibold text-emerald-900 dark:text-emerald-100 text-sm'>
+                        Account Verified
+                      </Text>
+                      <Text className='text-xs text-emerald-700 dark:text-emerald-300'>
+                        Your email is verified
+                      </Text>
                     </div>
                   </div>
 
-                  {/* Phone */}
-                  <div className='flex flex-col gap-1'>
-                    <Text className='text-xs font-semibold uppercase  text-gray-500 dark:text-gray-400'>
-                      Phone Number
-                    </Text>
-                    <div className='flex items-center gap-2 text-gray-700 dark:text-gray-200'>
-                      <Phone size={14} className='text-gray-400 dark:text-gray-500' />
-                      <Text className='text-sm font-medium'>
-                        {profileData?.phone_number || 'N/A'}
+                  <div
+                    className={cn(
+                      'flex items-start gap-3 p-3 rounded-lg border',
+                      profileData?.two_fa
+                        ? 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800'
+                        : 'bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800',
+                    )}
+                  >
+                    {profileData?.two_fa ? (
+                      <CheckCircle2
+                        size={18}
+                        className='text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-0.5'
+                      />
+                    ) : (
+                      <AlertCircle
+                        size={18}
+                        className='text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5'
+                      />
+                    )}
+                    <div>
+                      <Text
+                        className={cn(
+                          'font-semibold text-sm',
+                          profileData?.two_fa
+                            ? 'text-emerald-900 dark:text-emerald-100'
+                            : 'text-amber-900 dark:text-amber-100',
+                        )}
+                      >
+                        Two-Factor Authentication {profileData?.two_fa ? 'Enabled' : 'Disabled'}
+                      </Text>
+                      <Text
+                        className={cn(
+                          'text-xs',
+                          profileData?.two_fa
+                            ? 'text-emerald-700 dark:text-emerald-300'
+                            : 'text-amber-700 dark:text-amber-300',
+                        )}
+                      >
+                        {profileData?.two_fa
+                          ? 'Your account is extra secure'
+                          : 'Add 2FA for extra security'}
                       </Text>
                     </div>
                   </div>
@@ -218,205 +376,273 @@ const Profile = () => {
           </motion.div>
         </Col>
 
+        {/* Right Section - Forms and Settings */}
         <Col xs={24} lg={16}>
-          <motion.div variants={itemVariants}>
-            <Card size='small' className='overflow-hidden' styles={{ body: { padding: 0 } }}>
-              <Tabs
-                defaultActiveKey='1'
-                className='premium-tabs'
-                items={[
-                  {
-                    key: '1',
-                    label: (
-                      <div className='flex items-center gap-2 px-6 py-3'>
-                        <User size={18} />
-                        <span>Public Profile</span>
-                      </div>
-                    ),
-                    children: (
-                      <Card className='shadow'>
-                        <Form
-                          form={profileForm}
-                          layout='vertical'
-                          onFinish={onUpdateProfile}
-                          requiredMark={false}
-                        >
-                          <Row gutter={24}>
-                            <Col span={12}>
-                              <Form.Item
-                                label={<Text className='font-semibold'>Username</Text>}
-                                name='username'
-                                rules={[{ required: true, message: 'Username is required' }]}
-                              >
-                                <Input
-                                  prefix={<User size={16} className='text-gray-400' />}
-                                  size='middle'
-                                />
-                              </Form.Item>
-                            </Col>
-                            <Col span={12}>
-                              <Form.Item
-                                label={<Text className='font-semibold'>Display Name</Text>}
-                                name='name'
-                                rules={[{ required: true, message: 'Name is required' }]}
-                              >
-                                <Input
-                                  prefix={<User size={16} className='text-gray-400' />}
-                                  size='middle'
-                                />
-                              </Form.Item>
-                            </Col>
-                          </Row>
-                          <Form.Item
-                            label={<Text className='font-semibold'>Primary Email</Text>}
-                            name='email'
-                            rules={[{ required: true, type: 'email' }]}
-                          >
-                            <Input
-                              readOnly
-                              prefix={<Mail size={16} className='text-gray-400' />}
-                              size='middle'
-                            />
-                          </Form.Item>
-                          <Form.Item
-                            label={<Text className='font-semibold'>Phone Contact</Text>}
-                            name='phone_number'
-                          >
-                            <Input
-                              readOnly
-                              prefix={<Phone size={16} className='text-gray-400' />}
-                              size='middle'
-                            />
-                          </Form.Item>
-                          <div className=' flex justify-end'>
-                            <Button
-                              type='primary'
-                              htmlType='submit'
-                              loading={isUpdatingProfile}
-                              className='rounded-2xl bg-primary h-12 px-12 font-bold shadow-lg shadow-primary/20'
-                            >
-                              Save Changes
-                            </Button>
-                          </div>
-                        </Form>
-                      </Card>
-                    ),
-                  },
-                  {
-                    key: '2',
-                    label: (
-                      <div className='flex items-center gap-2 px-6 py-3'>
-                        <Key size={18} />
-                        <span>Security Settings</span>
-                      </div>
-                    ),
-                    children: (
-                      <Card className='shadow'>
-                        <Title level={4} className='mb-6!'>
-                          Change Your Password
-                        </Title>
-                        <Form
-                          form={passwordForm}
-                          layout='vertical'
-                          onFinish={onChangePassword}
-                          requiredMark={false}
-                        >
-                          <Form.Item
-                            label={<Text className='font-semibold'>Current Password</Text>}
-                            name='old_password'
-                            rules={[{ required: true, message: 'Please enter current password' }]}
-                          >
-                            <Input.Password
-                              prefix={<Key size={16} className='text-gray-400' />}
-                              placeholder='Provide your current password'
-                            />
-                          </Form.Item>
-                          <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-                            <Form.Item
-                              label={<Text className='font-semibold'>New Password</Text>}
-                              name='new_password'
-                              rules={[
-                                { required: true, min: 6, message: 'Please enter new password' },
-                              ]}
-                            >
-                              <Input.Password
-                                prefix={<Key size={16} className='text-gray-400' />}
-                                placeholder='Provide your new password'
-                              />
-                            </Form.Item>
-                            <Form.Item
-                              label={<Text className='font-semibold'>Confirm Password</Text>}
-                              name='confirm_password'
-                              dependencies={['new_password']}
-                              rules={[
-                                { required: true },
-                                ({ getFieldValue }) => ({
-                                  validator(_, value) {
-                                    if (!value || getFieldValue('new_password') === value) {
-                                      return Promise.resolve();
-                                    }
-                                    return Promise.reject(new Error('Passwords do not match'));
-                                  },
-                                }),
-                              ]}
-                            >
-                              <Input.Password
-                                prefix={<Key size={16} className='text-gray-400' />}
-                                placeholder='Provide your confirm password'
-                              />
-                            </Form.Item>
-                          </div>
-                          <div className='flex justify-end'>
-                            <Button
-                              type='primary'
-                              htmlType='submit'
-                              loading={isChangingPassword}
-                              className='rounded-2xl bg-gray-900 border-none h-12 px-12 font-bold shadow-lg shadow-black/20'
-                            >
-                              Update Password
-                            </Button>
-                          </div>
-                        </Form>
-                      </Card>
-                    ),
-                  },
+          <motion.div variants={itemVariants} className='space-y-6'>
+            {/* Edit Profile Card */}
+            <Card
+              className='border-0 transition-shadow duration-300 bg-white dark:bg-slate-800'
+              styles={{ body: { padding: 24 } }}
+            >
+              <div className='space-y-6'>
+                <div className='flex items-center gap-3 pb-4 border-b border-gray-100 dark:border-gray-700'>
+                  <div className='p-2 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg'>
+                    <User size={20} className='text-indigo-600 dark:text-indigo-400' />
+                  </div>
+                  <Title level={4} className='mb-0! font-bold'>
+                    Edit Profile
+                  </Title>
+                </div>
 
-                  {
-                    key: '3',
-                    label: (
-                      <div className='flex items-center gap-2 px-6 py-3'>
-                        <LoginOutlined size={18} />
-                        <span>Current Login</span>
-                      </div>
-                    ),
-                    children: <CurrentLogin />,
-                  },
-                ]}
-              />
+                <Form
+                  form={profileForm}
+                  layout='vertical'
+                  onFinish={onUpdateProfile}
+                  requiredMark={false}
+                >
+                  <Row gutter={24}>
+                    <Col xs={24} sm={12}>
+                      <Form.Item
+                        label={
+                          <Text className='font-semibold text-gray-700 dark:text-gray-300'>
+                            Username
+                          </Text>
+                        }
+                        name='username'
+                        rules={[{ required: true, message: 'Username is required' }]}
+                      >
+                        <Input
+                          prefix={<User size={16} className='text-gray-400' />}
+                          size='large'
+                          placeholder='Enter username'
+                          className='rounded-lg'
+                        />
+                      </Form.Item>
+                    </Col>
+                    <Col xs={24} sm={12}>
+                      <Form.Item
+                        label={
+                          <Text className='font-semibold text-gray-700 dark:text-gray-300'>
+                            Display Name
+                          </Text>
+                        }
+                        name='name'
+                        rules={[{ required: true, message: 'Name is required' }]}
+                      >
+                        <Input
+                          prefix={<User size={16} className='text-gray-400' />}
+                          size='large'
+                          placeholder='Enter display name'
+                          className='rounded-lg'
+                        />
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                  <Form.Item
+                    label={
+                      <Text className='font-semibold text-gray-700 dark:text-gray-300'>
+                        Primary Email
+                      </Text>
+                    }
+                    name='email'
+                    rules={[{ required: true, type: 'email' }]}
+                  >
+                    <Input
+                      readOnly
+                      prefix={<Mail size={16} className='text-gray-400' />}
+                      size='large'
+                      className='rounded-lg bg-gray-50 dark:bg-gray-700'
+                    />
+                  </Form.Item>
+                  <Form.Item
+                    label={
+                      <Text className='font-semibold text-gray-700 dark:text-gray-300'>
+                        Phone Number
+                      </Text>
+                    }
+                    name='phone_number'
+                  >
+                    <Input
+                      readOnly
+                      prefix={<Phone size={16} className='text-gray-400' />}
+                      size='large'
+                      placeholder='Phone number'
+                      className='rounded-lg bg-gray-50 dark:bg-gray-700'
+                    />
+                  </Form.Item>
+                  <div className='flex justify-end pt-2'>
+                    <Button type='primary' htmlType='submit' loading={isUpdatingProfile}>
+                      Save Changes
+                    </Button>
+                  </div>
+                </Form>
+              </div>
+            </Card>
+
+            {/* Change Password Card */}
+            <Card
+              className='border-0  transition-shadow duration-300 bg-white dark:bg-slate-800'
+              styles={{ body: { padding: 24 } }}
+            >
+              <div className='space-y-6'>
+                <div className='flex items-center gap-3 pb-4 border-b border-gray-100 dark:border-gray-700'>
+                  <div className='p-2 bg-red-100 dark:bg-red-900/30 rounded-lg'>
+                    <Key size={20} className='text-red-600 dark:text-red-400' />
+                  </div>
+                  <Title level={4} className='mb-0! font-bold'>
+                    Change Password
+                  </Title>
+                </div>
+
+                <Form
+                  form={passwordForm}
+                  layout='vertical'
+                  onFinish={onChangePassword}
+                  requiredMark={false}
+                >
+                  <Form.Item
+                    label={
+                      <Text className='font-semibold text-gray-700 dark:text-gray-300'>
+                        Current Password
+                      </Text>
+                    }
+                    name='old_password'
+                    rules={[{ required: true, message: 'Please enter current password' }]}
+                  >
+                    <Input.Password
+                      prefix={<Lock size={16} className='text-gray-400' />}
+                      size='large'
+                      placeholder='Enter your current password'
+                      className='rounded-lg'
+                    />
+                  </Form.Item>
+
+                  <Row gutter={24}>
+                    <Col xs={24} sm={12}>
+                      <Form.Item
+                        label={
+                          <Text className='font-semibold text-gray-700 dark:text-gray-300'>
+                            New Password
+                          </Text>
+                        }
+                        name='new_password'
+                        rules={[
+                          {
+                            required: true,
+                            min: 6,
+                            message: 'Password must be at least 6 characters',
+                          },
+                        ]}
+                      >
+                        <Input.Password
+                          prefix={<Lock size={16} className='text-gray-400' />}
+                          size='large'
+                          placeholder='Enter new password'
+                          className='rounded-lg'
+                        />
+                      </Form.Item>
+                    </Col>
+                    <Col xs={24} sm={12}>
+                      <Form.Item
+                        label={
+                          <Text className='font-semibold text-gray-700 dark:text-gray-300'>
+                            Confirm Password
+                          </Text>
+                        }
+                        name='confirm_password'
+                        dependencies={['new_password']}
+                        rules={[
+                          { required: true, message: 'Please confirm password' },
+                          ({ getFieldValue }) => ({
+                            validator(_, value) {
+                              if (!value || getFieldValue('new_password') === value) {
+                                return Promise.resolve();
+                              }
+                              return Promise.reject(new Error('Passwords do not match'));
+                            },
+                          }),
+                        ]}
+                      >
+                        <Input.Password
+                          prefix={<Lock size={16} className='text-gray-400' />}
+                          size='large'
+                          placeholder='Confirm password'
+                          className='rounded-lg'
+                        />
+                      </Form.Item>
+                    </Col>
+                  </Row>
+
+                  <div className='flex justify-end pt-2'>
+                    <Button type='primary' htmlType='submit' loading={isChangingPassword} danger>
+                      Update Password
+                    </Button>
+                  </div>
+                </Form>
+              </div>
+            </Card>
+
+            {/* Current Login Sessions */}
+            <Card
+              className='border-0  transition-shadow duration-300 bg-white dark:bg-slate-800'
+              styles={{ body: { padding: 24 } }}
+            >
+              <div className='space-y-6'>
+                <div className='flex items-center gap-3 pb-4 border-b border-gray-100 dark:border-gray-700'>
+                  <div className='p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg'>
+                    <LogOut size={20} className='text-purple-600 dark:text-purple-400' />
+                  </div>
+                  <Title level={4} className='mb-0! font-bold'>
+                    Current Login Sessions
+                  </Title>
+                </div>
+                <CurrentLogin />
+              </div>
             </Card>
           </motion.div>
         </Col>
       </Row>
 
       <style>{`
-        .premium-tabs .ant-tabs-nav {
-          margin-bottom: 0 !important;
+        @keyframes blob {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          33% { transform: translate(30px, -50px) scale(1.1); }
+          66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
 
+        .animate-blob {
+          animation: blob 7s infinite;
         }
-        .premium-tabs .ant-tabs-tab {
-          margin: 0 !important;
-          padding: 0 !important;
-          transition: all 0.3s ease;
-        }
-        .premium-tabs .ant-tabs-tab-active {
-          background-color: #f9fafb;
-        }
-        .premium-tabs .ant-tabs-ink-bar {
 
+        .animation-delay-2000 {
+          animation-delay: 2s;
         }
+
         .ant-form-item-label label {
           font-size: 0.875rem !important;
-          color: #374151 !important;
+          color: #6b7280 !important;
+        }
+
+        .dark .ant-form-item-label label {
+          color: #d1d5db !important;
+        }
+
+        .ant-input, .ant-input-password {
+          border-radius: 0.5rem !important;
+        }
+
+        .ant-input:focus-within, .ant-input-password-input:focus {
+          border-color: #4f46e5 !important;
+          box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1) !important;
+        }
+
+        .ant-btn-primary {
+          background: linear-gradient(135deg, #3b82f6 0%, #4f46e5 100%) !important;
+          border: none !important;
+        }
+
+        .ant-btn-primary:hover {
+          background: linear-gradient(135deg, #2563eb 0%, #4338ca 100%) !important;
         }
       `}</style>
     </motion.div>

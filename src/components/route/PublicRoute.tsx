@@ -10,9 +10,9 @@ const PublicRoute = ({ children }: PublicRouteProps) => {
   const location = useLocation();
   const from = location.state?.from?.pathname || '/dashboard';
 
-  const { data } = useAppSelector((state: RootState) => state.auth);
+  const { data, accessToken } = useAppSelector((state: RootState) => state.auth);
 
-  const isAuthenticated = !!data?.accessToken && !!data;
+  const isAuthenticated = !!accessToken && !!data;
 
   if (isAuthenticated) {
     return <Navigate to={from} replace />;

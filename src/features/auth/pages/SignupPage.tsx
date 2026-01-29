@@ -55,12 +55,12 @@ export default function SignupPage() {
                 <div className='w-6 h-6 bg-white rounded-md rotate-45' />
               </div>
               <Title level={2} style={{ color: 'white', margin: 0, letterSpacing: '-0.02em' }}>
-                INVENTORY 360ICT
+                INVENTORY 360
               </Title>
             </div>
 
             <h1 className='text-5xl lg:text-6xl font-extrabold leading-tight mb-6 bg-clip-text text-transparent bg-linear-to-r from-white to-blue-200'>
-              Join the Future <br /> of  Management
+              Join the Future <br /> of Management
             </h1>
             <p className='text-xl text-blue-100/80 max-w-lg mb-12 font-light leading-relaxed'>
               Create your account and start optimizing your business workflows with our intelligent
@@ -95,7 +95,7 @@ export default function SignupPage() {
                 <div className='w-5 h-5 bg-white rounded-sm rotate-45' />
               </div>
               <Title level={3} style={{ margin: 0 }}>
-                INVENTORY 360ICT
+                INVENTORY 360
               </Title>
             </div>
             <Title level={2} className='font-extrabold! mb-1!'>

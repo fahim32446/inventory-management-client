@@ -8,7 +8,7 @@ import {
   Network,
   Package,
   ShoppingCart,
-} from "lucide-react";
+} from 'lucide-react';
 
 export interface MenuItemType {
   icon?: React.ElementType;
@@ -19,96 +19,74 @@ export interface MenuItemType {
 
 export const menuItems: MenuItemType[] = [
   {
-    path: "/dashboard",
-    label: "Dashboards",
+    path: '/dashboard',
+    label: 'Dashboards',
     icon: Home,
   },
 
   {
-    path: "/products",
-    label: "Products",
+    path: '/products',
+    label: 'Products',
     icon: Package,
   },
+
   {
-    path: "/products/add",
-    icon: Package,
-    label: "Add Product",
-  },
-  {
-    path: "/category",
-    label: "Category",
+    path: '/category',
+    label: 'Category',
     icon: LayoutGrid,
   },
   {
-    path: "/warehouse",
-    label: "Warehouse",
+    path: '/warehouse',
+    label: 'Warehouse',
     icon: Folder,
   },
   {
-    path: "/suppliers",
-    label: "Suppliers",
+    path: '/suppliers',
+    label: 'Suppliers',
     icon: Network,
   },
 
   {
-    path: "/purchase",
-    label: "Purchase",
+    path: '/purchase',
+    label: 'Purchase',
     icon: ShoppingCart,
   },
   {
-    path: "/sale",
-    label: "Sale",
-    icon: Banknote,
-  },
-  {
-    path: "/sale/add",
-    label: "Sale",
-    icon: Banknote,
-  },
-  {
-    path: "/sale/edit/:saleId",
-    label: "Sale",
+    path: '/sale',
+    label: 'Sale',
     icon: Banknote,
   },
 
   {
-    path: "/report",
-    label: "Report",
+    path: '/report',
+    label: 'Report',
     icon: BarChart2,
 
     children: [
       {
-        path: "/report/sales",
-        label: "Sales",
+        path: '/report/sales',
+        label: 'Sales',
       },
       {
-        path: "/report/stock",
-        label: "Stock",
+        path: '/report/stock',
+        label: 'Stock',
       },
     ],
   },
 
   {
-    path: "/administration",
-    label: "Administration",
+    path: '/administration',
+    label: 'Administration',
     icon: Lock,
 
     children: [
       {
-        path: "/administration/users",
-        label: "Users",
+        path: '/administration/users',
+        label: 'Users',
       },
       {
-        path: "/administration/role",
-        label: "Role",
-      },
-      {
-        path: "/administration/role/create",
-        label: "Role",
-      },
-      {
-        path: "/administration/role/update/:roleId",
-        label: "Role",
+        path: '/administration/role',
+        label: 'Role',
       },
     ],
   },

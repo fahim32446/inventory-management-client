@@ -41,6 +41,7 @@ const MotionCard = motion(Card);
 const CurrentLogin: React.FC = () => {
   const [view, setView] = useState<'active' | 'revoked'>('active');
   const { data: response, isLoading } = useGetCurrentLoginQuery();
+
   const [revokeSession] = useRevokeSessionMutation();
   const [revokeAllSessions, { isLoading: isRevokingAll }] = useRevokeAllSessionsMutation();
 
@@ -162,7 +163,7 @@ const CurrentLogin: React.FC = () => {
                     className={cn(
                       session.is_revoked
                         ? 'opacity-70 grayscale'
-                        : 'hover:shadow-xl hover:border-primary/30'
+                        : 'hover:shadow-xl hover:border-primary/30',
                     )}
                   >
                     {/* Top */}

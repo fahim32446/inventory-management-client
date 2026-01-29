@@ -8,13 +8,11 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  const { data } = useAppSelector((state: RootState) => state.auth);
+  const { data, accessToken } = useAppSelector((state: RootState) => state.auth);
 
-  // Check if user is authenticated
-  const isAuthenticated = !!data?.accessToken && !!data;
+  const isAuthenticated = !!accessToken && !!data;
 
   if (!isAuthenticated) {
-    // Redirect to login if not authenticated
     return <Navigate to='/login' replace />;
   }
 

@@ -8,7 +8,10 @@ import { useAddSaleMutation, useUpdateSaleMutation } from '../api/saleApis';
 import ProductFormListSales from '../components/ProductFormListSales';
 import type { IAddPurISale, ISale } from '../sale.interface';
 import { useAppDispatch } from '../../../hooks/hooks';
-import { CommonDateInput, CommonTextInput } from '../../../components/common/input-items/input-item';
+import {
+  CommonDateInput,
+  CommonTextInput,
+} from '../../../components/common/input-items/input-item';
 import SubmitButton from '../../../components/common/submit-button';
 import { IAddPurIPurchase } from '../../purchase/purchase.interface';
 
@@ -38,7 +41,7 @@ const AddSale = ({ data }: IProps) => {
     };
 
     if (isEdit) {
-      updateSupplier({ body: body, purchaseId: data.purchaseId });
+      updateSupplier({ body: body, saleId: data.purchaseId });
     } else {
       addSupplier(body);
     }
