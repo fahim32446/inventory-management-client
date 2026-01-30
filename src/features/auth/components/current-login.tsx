@@ -95,16 +95,6 @@ const CurrentLogin: React.FC = () => {
                 ),
                 value: 'active',
               },
-              {
-                label: (
-                  <div className='flex items-center gap-2 px-3'>
-                    <Monitor size={14} />
-                    <span>Revoked</span>
-                    <Badge count={revokedCount} size='small' />
-                  </div>
-                ),
-                value: 'revoked',
-              },
             ]}
           />
 
