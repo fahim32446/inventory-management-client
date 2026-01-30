@@ -5,7 +5,6 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   MoonOutlined,
-  SettingOutlined,
   SunOutlined,
   UserOutlined,
 } from '@ant-design/icons';
