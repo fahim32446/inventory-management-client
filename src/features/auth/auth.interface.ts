@@ -25,7 +25,7 @@ export interface ILoginData {
 
 export interface IRole {
   id: number;
-  role_name: string;
+  name: string;
   status: boolean;
   is_main_role: boolean;
   create_date: string;

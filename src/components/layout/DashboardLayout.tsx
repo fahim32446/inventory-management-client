@@ -132,7 +132,7 @@ export default function DashboardLayout() {
       )}
 
       <Layout className={cn('transition-all duration-200 flex flex-col h-screen overflow-hidden')}>
-        <Header className='bg-white! dark:bg-gray-900! p-0 shadow-sm z-10 sticky top-0 flex items-center justify-between px-4 border-b border-gray-200 dark:border-gray-800 h-16'>
+        <Header className='bg-white! dark:bg-black! p-0 shadow-sm z-10 sticky top-0 flex items-center justify-between px-4 border-b border-gray-200 dark:border-gray-800 h-16'>
           <div className='flex items-center gap-4'>
             <Button
               type='text'
@@ -164,16 +164,12 @@ export default function DashboardLayout() {
             </Tooltip>
             <Dropdown menu={{ items: userMenu }} trigger={['click']} placement='bottomRight'>
               <div className='flex items-center gap-3 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 p-2 rounded-lg transition-colors'>
-                <Avatar
-                  src={data?.photo}
-                  icon={<UserOutlined />}
-                  className='bg-blue-100 text-blue-600'
-                />
+                <Avatar icon={<UserOutlined />} />
                 <div className='hidden md:block text-sm'>
                   <p className='font-semibold text-gray-700 dark:text-gray-200 leading-tight'>
                     {data?.name || 'User'}
                   </p>
-                  <p className='text-xs text-gray-400 leading-tight'>{data?.role?.role_name}</p>
+                  <p className='text-xs text-gray-400 leading-tight'>{data?.role?.name}</p>
                 </div>
               </div>
             </Dropdown>

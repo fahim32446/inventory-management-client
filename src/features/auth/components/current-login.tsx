@@ -1,12 +1,17 @@
 import {
+  Avatar,
   Badge,
   Button,
   Card,
+  Col,
+  Divider,
   Empty,
   List,
   Popconfirm,
+  Row,
   Segmented,
   Skeleton,
+  Space,
   Tag,
   Tooltip,
   Typography,
@@ -14,16 +19,7 @@ import {
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { AnimatePresence, motion } from 'framer-motion';
-import {
-  Activity,
-  Globe,
-  History,
-  Monitor,
-  Smartphone,
-  Tablet,
-  Trash2,
-  XCircle,
-} from 'lucide-react';
+import { Activity, Globe, Monitor, Smartphone, Tablet, Trash2, XCircle } from 'lucide-react';
 import React, { useMemo, useState } from 'react';
 import { cn } from '../../../utils/cn';
 import {
@@ -52,7 +48,6 @@ const CurrentLogin: React.FC = () => {
   }, [allSessions, view]);
 
   const activeCount = useMemo(() => allSessions.filter((s) => !s.is_revoked).length, [allSessions]);
-  const revokedCount = allSessions.length - activeCount;
 
   const getDeviceIcon = (device?: string) => {
     const d = device?.toLowerCase() || '';
@@ -71,6 +66,8 @@ const CurrentLogin: React.FC = () => {
     );
   }
 
+  const revokedCount = allSessions.filter((s) => s.is_revoked).length;
+
   return (
     <section className='p-6 space-y-8'>
       {/* Header */}
@@ -79,7 +76,7 @@ const CurrentLogin: React.FC = () => {
           <Title level={4} className='mb-0!'>
             Session Management
           </Title>
-          <Text type='secondary'>Manage and monitor devices currently signed in</Text>
+          <Text type='secondary'>Monitor and manage active sessions across devices</Text>
         </div>
 
         <div className='flex flex-wrap items-center gap-3'>
@@ -101,9 +98,9 @@ const CurrentLogin: React.FC = () => {
               {
                 label: (
                   <div className='flex items-center gap-2 px-3'>
-                    <History size={14} />
-                    <span>History</span>
-                    <Badge count={revokedCount} size='small' color='#9ca3af' />
+                    <Monitor size={14} />
+                    <span>Revoked</span>
+                    <Badge count={revokedCount} size='small' />
                   </div>
                 ),
                 value: 'revoked',
@@ -166,64 +163,76 @@ const CurrentLogin: React.FC = () => {
                         : 'hover:shadow-xl hover:border-primary/30',
                     )}
                   >
-                    {/* Top */}
-                    <div className='flex items-start justify-between'>
-                      <div className='flex gap-4'>
-                        <div className='h-14 w-14 flex items-center justify-center rounded-2xl bg-primary/10'>
+                    <Row align='middle' gutter={[12, 12]}>
+                      <Col flex='none'>
+                        <Avatar size={56} className='bg-gray-100 dark:bg-gray-800'>
                           {getDeviceIcon(session.device)}
-                        </div>
-                        <div>
-                          <div className='flex items-center gap-2'>
-                            <Text strong>{session.device || 'Unknown device'}</Text>
-                            {!session.is_revoked && <Badge status='processing' />}
+                        </Avatar>
+                      </Col>
+
+                      <Col flex='auto'>
+                        <Space direction='vertical' size={2} style={{ width: '100%' }}>
+                          <div className='flex items-center justify-between gap-3'>
+                            <div>
+                              <Text strong className='block'>
+                                {session.device || 'Unknown device'}
+                              </Text>
+                              <Text type='secondary' className='text-xs block'>
+                                <Globe size={12} className='inline mr-1' /> {session.ip_address}
+                              </Text>
+                            </div>
+
+                            <div className='text-right'>
+                              <Text type='secondary' className='text-xs uppercase'>
+                                Last active
+                              </Text>
+                              <div className='font-medium'>
+                                <Tooltip
+                                  title={dayjs(session.created_at).format('MMM D, YYYY HH:mm')}
+                                >
+                                  {dayjs(session.created_at).fromNow()}
+                                </Tooltip>
+                              </div>
+                            </div>
                           </div>
-                          <div className='flex items-center gap-1 text-xs text-gray-500'>
-                            <Globe size={12} />
-                            {session.ip_address}
+
+                          <Divider style={{ margin: '6px 0' }} />
+
+                          <div className='flex items-center justify-between'>
+                            <div className='flex items-center gap-2'>
+                              <Tag
+                                className='rounded-lg'
+                                color={session.is_revoked ? 'default' : 'processing'}
+                              >
+                                {session.user_type || 'User'}
+                              </Tag>
+                              {session.location && (
+                                <Text type='secondary' className='text-xs'>
+                                  {session.location}
+                                </Text>
+                              )}
+                            </div>
+
+                            <div className='flex items-center gap-2'>
+                              <Tooltip title={session.user_agent} placement='left'>
+                                <Text className='text-xs text-gray-400 cursor-help'>Meta</Text>
+                              </Tooltip>
+
+                              {!session.is_revoked && (
+                                <Popconfirm
+                                  title='End this session?'
+                                  onConfirm={() => revokeSession({ sessionId: session.id })}
+                                  okText='End'
+                                  okButtonProps={{ danger: true }}
+                                >
+                                  <Button type='text' danger icon={<Trash2 size={16} />} />
+                                </Popconfirm>
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      </div>
-
-                      {!session.is_revoked && (
-                        <Popconfirm
-                          title='End this session?'
-                          onConfirm={() => revokeSession({ sessionId: session.id })}
-                          okText='End'
-                          okButtonProps={{ danger: true }}
-                        >
-                          <Button type='text' danger icon={<Trash2 size={16} />} />
-                        </Popconfirm>
-                      )}
-                    </div>
-
-                    {/* Meta */}
-                    <div className='mt-6 grid grid-cols-2 gap-4 rounded bg-gray-50 dark:bg-gray-800 p-2'>
-                      <div>
-                        <Text type='secondary' className='text-xs uppercase'>
-                          Location
-                        </Text>
-                        <div className='font-medium'>{session.location || 'Unknown'}</div>
-                      </div>
-                      <div className='text-right'>
-                        <Text type='secondary' className='text-xs uppercase'>
-                          Last login
-                        </Text>
-                        <div className='font-medium'>{dayjs(session.created_at).fromNow()}</div>
-                      </div>
-                    </div>
-
-                    {/* Footer */}
-                    <div className='mt-5 flex items-center justify-between'>
-                      <div className='flex gap-2'>
-                        <Tag className='rounded-lg'>{session.user_type}</Tag>
-                        {session.is_revoked && <Tag color='default'>Revoked</Tag>}
-                      </div>
-                      <Tooltip title={session.user_agent}>
-                        <div className='flex items-center gap-1 text-xs text-gray-400 cursor-help'>
-                          <Monitor size={14} /> Meta
-                        </div>
-                      </Tooltip>
-                    </div>
+                        </Space>
+                      </Col>
+                    </Row>
                   </MotionCard>
                 </List.Item>
               )}

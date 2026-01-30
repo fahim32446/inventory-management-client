@@ -1,5 +1,5 @@
+import { UserOutlined } from '@ant-design/icons';
 import { Avatar, Button, Card, Col, Form, Input, Row, Switch, Typography } from 'antd';
-import { motion } from 'framer-motion';
 import {
   AlertCircle,
   CheckCircle2,
@@ -9,7 +9,6 @@ import {
   Mail,
   Phone,
   ShieldCheck,
-  User,
 } from 'lucide-react';
 import { useEffect } from 'react';
 import Loading from '../../../components/common/loading';
@@ -68,34 +67,9 @@ const Profile = () => {
     return <Loading />;
   }
 
-  const containerVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5, staggerChildren: 0.1 },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, x: -20 },
-    visible: { opacity: 1, x: 0 },
-  };
-
-  const cardVariants = {
-    hidden: { opacity: 0, scale: 0.95 },
-    visible: { opacity: 1, scale: 1, transition: { duration: 0.3 } },
-  };
-
   return (
-    <motion.div
-      initial='hidden'
-      animate='visible'
-      variants={containerVariants}
-      className='min-h-screen p-2 md:px-8 max-w-7xl mx-auto space-y-8 dark:from-slate-950 dark:to-slate-900'
-    >
-      {/* Premium Header Section */}
-      <motion.section variants={itemVariants} className='relative'>
+    <div className='min-h-screen p-2 md:px-8 max-w-7xl mx-auto space-y-8 dark:from-slate-950 dark:to-slate-900'>
+      <div className='relative'>
         <div className='absolute inset-0 -z-10'>
           <div className='absolute top-0 right-0 w-80 h-80 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob'></div>
           <div className='absolute top-0 -left-4 w-72 h-72 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000'></div>
@@ -105,26 +79,15 @@ const Profile = () => {
           className='border-0  bg-linear-to-br from-white via-blue-50 to-indigo-50 dark:from-slate-800 dark:via-slate-800 dark:to-slate-800 overflow-hidden'
           styles={{ body: { padding: 32 } }}
         >
-          <div className='flex flex-col md:flex-row items-center gap-8'>
-            {/* Avatar Section */}
-            <motion.div variants={cardVariants} className='relative shrink-0'>
+          <div className='flex flex-col md:flex-row items-center gap-5'>
+            <div className='relative shrink-0'>
               <div className='relative'>
-                <Avatar
-                  size={{ xs: 100, sm: 120, md: 140, lg: 140, xl: 140, xxl: 140 }}
-                  src={profileData?.photo}
-                  icon={<User />}
-                  className='border-8 border-white  bg-linear-to-br from-blue-100 to-indigo-100'
-                />
-                <div className='absolute bottom-3 right-3 flex items-center gap-1 bg-white px-3 py-1 rounded-full shadow-lg'>
-                  <div className='w-3 h-3 rounded-full bg-emerald-500 animate-pulse'></div>
-                  <Text className='text-xs font-semibold text-gray-700'>Online</Text>
-                </div>
+                <Avatar size={130} icon={<UserOutlined />} />
               </div>
-            </motion.div>
+            </div>
 
-            {/* Profile Info Section */}
-            <motion.div variants={itemVariants} className='flex-1 text-center md:text-left'>
-              <div className='space-y-4'>
+            <div className='flex-1 text-center md:text-left'>
+              <div className='space-y-2'>
                 <div>
                   <Title
                     level={2}
@@ -133,11 +96,9 @@ const Profile = () => {
                     {profileData?.name}
                   </Title>
                   <div className='flex items-center justify-center md:justify-start gap-3 mt-2'>
-                    <div className='h-1.5 w-12 rounded-full bg-linear-to-r from-blue-500 to-indigo-500'></div>
                     <span className='text-sm font-semibold px-4 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full'>
-                      {profileData?.role.role_name}
+                      {profileData?.company_name}
                     </span>
-                    <CheckCircle2 size={18} className='text-emerald-500' />
                   </div>
                 </div>
 
@@ -153,13 +114,12 @@ const Profile = () => {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
           </div>
         </Card>
-      </motion.section>
+      </div>
 
-      {/* Two-Factor Authentication Prominent Section */}
-      <motion.section variants={itemVariants}>
+      <div>
         <Card
           className={cn(
             'border-0  transition-all duration-300 overflow-hidden',
@@ -171,16 +131,14 @@ const Profile = () => {
         >
           <div className='flex flex-col md:flex-row items-center justify-between p-8 md:p-10'>
             <div className='flex items-center gap-6 flex-1'>
-              <motion.div
-                animate={{ rotate: profileData?.two_fa ? [0, 5, -5, 0] : 0 }}
-                transition={{ duration: 2, repeat: Infinity }}
+              <div
                 className={cn(
                   'p-4 rounded-2xl shadow-lg',
                   profileData?.two_fa ? 'bg-emerald-500' : 'bg-red-500',
                 )}
               >
                 <ShieldCheck size={32} className='text-white' />
-              </motion.div>
+              </div>
 
               <div className='flex-1'>
                 <Title level={3} className='mb-2! font-bold'>
@@ -206,7 +164,7 @@ const Profile = () => {
               </div>
             </div>
 
-            <motion.div variants={cardVariants} className='mt-6 md:mt-0 flex items-center gap-4'>
+            <div className='mt-6 md:mt-0 flex items-center gap-4'>
               <Switch
                 checked={profileData?.two_fa}
                 onChange={onToggle2FA}
@@ -218,16 +176,14 @@ const Profile = () => {
                     : '[&.ant-switch]:bg-red-500',
                 )}
               />
-            </motion.div>
+            </div>
           </div>
         </Card>
-      </motion.section>
+      </div>
 
       <Row gutter={[32, 32]}>
-        {/* Left Sidebar - Profile Information */}
         <Col xs={24} lg={8}>
-          <motion.div variants={itemVariants} className='space-y-6!'>
-            {/* Profile Info Card */}
+          <div className='space-y-6!'>
             <Card
               className='border-0 transition-shadow duration-300 bg-white dark:bg-slate-800'
               styles={{ body: { padding: 24 } }}
@@ -235,14 +191,13 @@ const Profile = () => {
               <div className='space-y-6'>
                 <div className='flex items-center gap-3 pb-4 border-b border-gray-100 dark:border-gray-700'>
                   <div className='p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg'>
-                    <User size={20} className='text-blue-600 dark:text-blue-400' />
+                    <UserOutlined size={20} className='text-blue-600 dark:text-blue-400' />
                   </div>
                   <Title level={4} className='mb-0! font-bold'>
                     Profile Information
                   </Title>
                 </div>
 
-                {/* Full Name */}
                 <div className='space-y-2'>
                   <Text className='text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 tracking-wide'>
                     Full Name
@@ -254,20 +209,18 @@ const Profile = () => {
                   </div>
                 </div>
 
-                {/* Email */}
                 <div className='space-y-2'>
                   <Text className='text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 tracking-wide'>
                     Email Address
                   </Text>
-                  <div className='p-3 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-slate-700 dark:to-slate-800 rounded-lg border border-gray-200 dark:border-slate-600 flex items-center gap-2'>
-                    <Mail size={16} className='text-blue-500 flex-shrink-0' />
+                  <div className='p-3 bg-linear-to-br from-gray-50 to-gray-100 dark:from-slate-700 dark:to-slate-800 rounded-lg border border-gray-200 dark:border-slate-600 flex items-center gap-2'>
+                    <Mail size={16} className='text-blue-500 shrink-0' />
                     <Text className='font-medium text-gray-700 dark:text-gray-300 text-sm truncate'>
                       {profileData?.email || 'N/A'}
                     </Text>
                   </div>
                 </div>
 
-                {/* Phone */}
                 <div className='space-y-2'>
                   <Text className='text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 tracking-wide'>
                     Phone Number
@@ -280,7 +233,6 @@ const Profile = () => {
                   </div>
                 </div>
 
-                {/* Role */}
                 <div className='space-y-2'>
                   <Text className='text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 tracking-wide'>
                     Account Role
@@ -288,14 +240,13 @@ const Profile = () => {
                   <div className='p-3 bg-linear-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg border border-blue-200 dark:border-blue-800 flex items-center gap-2'>
                     <CheckCircle2 size={16} className='text-blue-600 dark:text-blue-400 shrink-0' />
                     <Text className='font-semibold text-blue-700 dark:text-blue-300'>
-                      {profileData?.role.role_name}
+                      {profileData?.role.name}
                     </Text>
                   </div>
                 </div>
               </div>
             </Card>
 
-            {/* Security Status Card */}
             <Card
               className='border-0  transition-shadow duration-300 bg-white dark:bg-slate-800'
               styles={{ body: { padding: 24 } }}
@@ -319,9 +270,6 @@ const Profile = () => {
                     <div>
                       <Text className='font-semibold text-emerald-900 dark:text-emerald-100 text-sm'>
                         Account Verified
-                      </Text>
-                      <Text className='text-xs text-emerald-700 dark:text-emerald-300'>
-                        Your email is verified
                       </Text>
                     </div>
                   </div>
@@ -373,13 +321,11 @@ const Profile = () => {
                 </div>
               </div>
             </Card>
-          </motion.div>
+          </div>
         </Col>
 
-        {/* Right Section - Forms and Settings */}
         <Col xs={24} lg={16}>
-          <motion.div variants={itemVariants} className='space-y-6'>
-            {/* Edit Profile Card */}
+          <div className='space-y-6'>
             <Card
               className='border-0 transition-shadow duration-300 bg-white dark:bg-slate-800'
               styles={{ body: { padding: 24 } }}
@@ -387,7 +333,7 @@ const Profile = () => {
               <div className='space-y-6'>
                 <div className='flex items-center gap-3 pb-4 border-b border-gray-100 dark:border-gray-700'>
                   <div className='p-2 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg'>
-                    <User size={20} className='text-indigo-600 dark:text-indigo-400' />
+                    <UserOutlined size={20} className='text-indigo-600 dark:text-indigo-400' />
                   </div>
                   <Title level={4} className='mb-0! font-bold'>
                     Edit Profile
@@ -401,25 +347,7 @@ const Profile = () => {
                   requiredMark={false}
                 >
                   <Row gutter={24}>
-                    <Col xs={24} sm={12}>
-                      <Form.Item
-                        label={
-                          <Text className='font-semibold text-gray-700 dark:text-gray-300'>
-                            Username
-                          </Text>
-                        }
-                        name='username'
-                        rules={[{ required: true, message: 'Username is required' }]}
-                      >
-                        <Input
-                          prefix={<User size={16} className='text-gray-400' />}
-                          size='large'
-                          placeholder='Enter username'
-                          className='rounded-lg'
-                        />
-                      </Form.Item>
-                    </Col>
-                    <Col xs={24} sm={12}>
+                    <Col xs={24} sm={24}>
                       <Form.Item
                         label={
                           <Text className='font-semibold text-gray-700 dark:text-gray-300'>
@@ -430,7 +358,7 @@ const Profile = () => {
                         rules={[{ required: true, message: 'Name is required' }]}
                       >
                         <Input
-                          prefix={<User size={16} className='text-gray-400' />}
+                          prefix={<UserOutlined size={16} className='text-gray-400' />}
                           size='large'
                           placeholder='Enter display name'
                           className='rounded-lg'
@@ -454,22 +382,7 @@ const Profile = () => {
                       className='rounded-lg bg-gray-50 dark:bg-gray-700'
                     />
                   </Form.Item>
-                  <Form.Item
-                    label={
-                      <Text className='font-semibold text-gray-700 dark:text-gray-300'>
-                        Phone Number
-                      </Text>
-                    }
-                    name='phone_number'
-                  >
-                    <Input
-                      readOnly
-                      prefix={<Phone size={16} className='text-gray-400' />}
-                      size='large'
-                      placeholder='Phone number'
-                      className='rounded-lg bg-gray-50 dark:bg-gray-700'
-                    />
-                  </Form.Item>
+
                   <div className='flex justify-end pt-2'>
                     <Button type='primary' htmlType='submit' loading={isUpdatingProfile}>
                       Save Changes
@@ -479,7 +392,6 @@ const Profile = () => {
               </div>
             </Card>
 
-            {/* Change Password Card */}
             <Card
               className='border-0  transition-shadow duration-300 bg-white dark:bg-slate-800'
               styles={{ body: { padding: 24 } }}
@@ -582,7 +494,6 @@ const Profile = () => {
               </div>
             </Card>
 
-            {/* Current Login Sessions */}
             <Card
               className='border-0  transition-shadow duration-300 bg-white dark:bg-slate-800'
               styles={{ body: { padding: 24 } }}
@@ -599,7 +510,7 @@ const Profile = () => {
                 <CurrentLogin />
               </div>
             </Card>
-          </motion.div>
+          </div>
         </Col>
       </Row>
 
@@ -645,7 +556,7 @@ const Profile = () => {
           background: linear-gradient(135deg, #2563eb 0%, #4338ca 100%) !important;
         }
       `}</style>
-    </motion.div>
+    </div>
   );
 };
 

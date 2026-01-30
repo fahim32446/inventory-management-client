@@ -1,25 +1,32 @@
 import { Form, Row } from 'antd';
 import { useForm } from 'antd/es/form/Form';
-import { useAddProductMutation } from '../api/productApis';
-import { CommonNumberInput, CommonTextInput } from '../../../components/common/input-items/input-item';
+import { CommonTextInput } from '../../../components/common/input-items/input-item';
+import SelectCategories from '../../../components/common/select/select-categories';
 import SubmitButton from '../../../components/common/submit-button';
+import { useAddProductMutation } from '../api/productApis';
+import { useNavigate } from 'react-router';
 
 const AddProduct = () => {
   const [form] = useForm();
+  const navigate = useNavigate();
 
   const [addProduct, { isLoading }] = useAddProductMutation();
 
   const submit = (e: any) => {
-    addProduct(e);
+    addProduct(e)
+      .unwrap()
+      .then(() => {
+        navigate('/products');
+      });
   };
 
   return (
     <Form onFinish={submit} form={form} layout='vertical'>
       <Row style={{ maxWidth: '300px', margin: '0 auto' }} gutter={[16, 0]}>
-        <CommonNumberInput
+        <SelectCategories
           formItemProps={{
             name: 'catId',
-            label: 'Category Id',
+            label: 'Select a Category',
             rules: [{ required: true }],
           }}
           colProps={{ lg: 24 }}
