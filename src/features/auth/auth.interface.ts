@@ -4,6 +4,46 @@ export interface ILoginBody {
   otp?: string;
 }
 
+export type PERMISSION_TYPE =
+  | 'sale:create'
+  | 'sale:read'
+  | 'sale:create'
+  | 'sale:read'
+  | 'sale:update'
+  | 'sale:delete'
+  | 'dashboard:read'
+  | 'products:create'
+  | 'products:read'
+  | 'products:update'
+  | 'products:delete'
+  | 'category:create'
+  | 'category:read'
+  | 'category:update'
+  | 'category:delete'
+  | 'warehouse:create'
+  | 'warehouse:read'
+  | 'warehouse:update'
+  | 'warehouse:delete'
+  | 'suppliers:create'
+  | 'suppliers:read'
+  | 'suppliers:update'
+  | 'suppliers:delete'
+  | 'purchase:create'
+  | 'purchase:read'
+  | 'purchase:update'
+  | 'purchase:delete'
+  | 'report:read'
+  | 'administration:read'
+  | 'administration:update'
+  | 'administration:users:create'
+  | 'administration:users:read'
+  | 'administration:users:update'
+  | 'administration:users:delete'
+  | 'administration:roles:create'
+  | 'administration:roles:read'
+  | 'administration:roles:update'
+  | 'administration:roles:delete';
+
 export interface ILoginResponse {
   success: boolean;
   message: string;
@@ -21,16 +61,14 @@ export interface ILoginData {
   role: IRole;
   phone_number?: string;
   photo?: string;
+  permission: PERMISSION_TYPE[] | null;
 }
 
 export interface IRole {
-  id: number;
+  roleId: 1;
   name: string;
-  status: boolean;
-  is_main_role: boolean;
-  create_date: string;
-  created_by: string;
-  created_by_name: string;
+  orgId: number | null;
+  isAdmin: boolean;
 }
 
 export interface ISendEmailVerificationBody {
@@ -56,21 +94,6 @@ export interface IResetPasswordBody {
 }
 
 export interface IProfileDataResponse {
-  // id: number;
-  // username: string;
-  // name: string;
-  // email: string;
-  // phone_number: string;
-  // photo: string;
-  // status: boolean;
-  // create_date: string;
-  // is_main_user: boolean;
-  // socket_id: string;
-  // two_fa: boolean;
-  // role: string;
-  // created_by_name: string;
-  // permissions: IRole;
-
   success: boolean;
   message: string;
   data: ILoginData | null;

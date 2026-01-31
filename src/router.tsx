@@ -1,25 +1,27 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import DashboardLayout from './components/layout/DashboardLayout';
 import PublicLayout from './components/layout/PublicLayout';
+import PermissionRoute from './components/route/PermissionRoute';
 import ProtectedRoute from './components/route/ProtectedRoute';
 import PublicRoute from './components/route/PublicRoute';
+import ManageRole from './features/administration/pages/ManageRole';
+import RoleList from './features/administration/pages/RoleList';
+import Users from './features/administration/pages/Users';
+import ForgotPasswordPage from './features/auth/pages/ForgotPasswordPage';
 import LoginPage from './features/auth/pages/LoginPage';
-import ComingSoon from './features/ComingSoon';
-import DashboardAccount from './features/dashboard/dashboard-account';
-import WarehouseList from './features/wearehouse/page/WarehouseList';
-import ProductList from './features/product/page/ProductList';
-import AddProduct from './features/product/page/AddProduct';
+import Profile from './features/auth/pages/Profile';
 import CategoryList from './features/categories/page/CategoryList';
-import SuppliersList from './features/suppliers/page/SuppliersList';
+import DashboardAccount from './features/dashboard/dashboard-account';
+import AddProduct from './features/product/page/AddProduct';
+import ProductList from './features/product/page/ProductList';
 import PurchaseList from './features/purchase/page/PurchaseList';
-import SaleList from './features/sale/page/SaleList';
+import SalesReport from './features/report/page/SalesReport';
+import StockReport from './features/report/page/StockReport';
 import AddSale from './features/sale/page/AddSale';
 import EditSale from './features/sale/page/EditSale';
-import Users from './features/administration/pages/Users';
-import RoleList from './features/administration/pages/RoleList';
-import ManageRole from './features/administration/pages/ManageRole';
-import Profile from './features/auth/pages/Profile';
-import ForgotPasswordPage from './features/auth/pages/ForgotPasswordPage';
+import SaleList from './features/sale/page/SaleList';
+import SuppliersList from './features/suppliers/page/SuppliersList';
+import WarehouseList from './features/wearehouse/page/WarehouseList';
 
 export const router = createBrowserRouter([
   {
@@ -39,10 +41,9 @@ export const router = createBrowserRouter([
         element: <ForgotPasswordPage />,
       },
       {
-        path: 'login', // Backward compatibility / redirect
+        path: 'login',
         element: <Navigate to='/auth/login' replace />,
       },
-      // Keep other public routes if needed, otherwise just what user asked
     ],
   },
 
@@ -64,60 +65,100 @@ export const router = createBrowserRouter([
       },
       {
         path: 'dashboard',
-        element: <DashboardAccount />, // Mapping <Dashboard /> to existing DashboardAccount
+        element: (
+          <PermissionRoute permissions={['dashboard:read']}>
+            <DashboardAccount />
+          </PermissionRoute>
+        ),
       },
 
       {
         path: 'profile',
-        element: <Profile />, // <Profile />
+        element: <Profile />,
       },
 
       // Products
       {
         path: 'products',
-        element: <ProductList />, // <ProductList />
+        element: (
+          <PermissionRoute permissions={['products:read']}>
+            <ProductList />
+          </PermissionRoute>
+        ),
       },
       {
         path: 'products/add',
-        element: <AddProduct />, // <AddProduct />
+        element: (
+          <PermissionRoute permissions={['products:create']}>
+            <AddProduct />
+          </PermissionRoute>
+        ),
       },
 
       // Category
       {
         path: 'category',
-        element: <CategoryList />, // <CategoryList />
+        element: (
+          <PermissionRoute permissions={['category:read']}>
+            <CategoryList />
+          </PermissionRoute>
+        ),
       },
 
       // Warehouse
       {
         path: 'warehouse',
-        element: <WarehouseList />, // <WarehouseList />
+        element: (
+          <PermissionRoute permissions={['warehouse:read']}>
+            <WarehouseList />
+          </PermissionRoute>
+        ),
       },
 
       // Suppliers
       {
         path: 'suppliers',
-        element: <SuppliersList />, // <SuppliersList />
+        element: (
+          <PermissionRoute permissions={['suppliers:read']}>
+            <SuppliersList />
+          </PermissionRoute>
+        ),
       },
 
       // Purchase
       {
         path: 'purchase',
-        element: <PurchaseList />, // <PurchaseList />
+        element: (
+          <PermissionRoute permissions={['purchase:read']}>
+            <PurchaseList />
+          </PermissionRoute>
+        ),
       },
 
       // Sale
       {
         path: 'sale',
-        element: <SaleList />, // <SaleList />
+        element: (
+          <PermissionRoute permissions={['sale:read']}>
+            <SaleList />
+          </PermissionRoute>
+        ),
       },
       {
         path: 'sale/add',
-        element: <AddSale />, // <AddSale />
+        element: (
+          <PermissionRoute permissions={['sale:create']}>
+            <AddSale />
+          </PermissionRoute>
+        ),
       },
       {
         path: 'sale/edit/:saleId',
-        element: <EditSale />, // <EditSale />
+        element: (
+          <PermissionRoute permissions={['sale:update']}>
+            <EditSale />
+          </PermissionRoute>
+        ),
       },
 
       // Report
@@ -125,16 +166,24 @@ export const router = createBrowserRouter([
         path: 'report',
         children: [
           {
-            index: true, // /report
-            element: <Navigate to='sales' replace />, // Redirect to first child? Or ComingSoon
+            index: true,
+            element: <Navigate to='sales' replace />,
           },
           {
             path: 'sales',
-            element: <ComingSoon />, // <SalesReport />
+            element: (
+              <PermissionRoute permissions={['report:read']}>
+                <SalesReport />
+              </PermissionRoute>
+            ),
           },
           {
             path: 'stock',
-            element: <ComingSoon />, // <StockReport />
+            element: (
+              <PermissionRoute permissions={['report:read']}>
+                <StockReport />
+              </PermissionRoute>
+            ),
           },
         ],
       },
@@ -149,22 +198,38 @@ export const router = createBrowserRouter([
           },
           {
             path: 'users',
-            element: <Users />, // <Users />
+            element: (
+              <PermissionRoute permissions={['administration:users:read']}>
+                <Users />
+              </PermissionRoute>
+            ),
           },
           {
             path: 'role',
             children: [
               {
                 index: true,
-                element: <RoleList />, // <RoleList /> (path /administration/role)
+                element: (
+                  <PermissionRoute permissions={['administration:roles:read']}>
+                    <RoleList />
+                  </PermissionRoute>
+                ),
               },
               {
                 path: 'create',
-                element: <ManageRole />, // <ManageRole />
+                element: (
+                  <PermissionRoute permissions={['administration:roles:create']}>
+                    <ManageRole />
+                  </PermissionRoute>
+                ),
               },
               {
                 path: 'update/:roleId',
-                element: <ManageRole />, // <ManageRole />
+                element: (
+                  <PermissionRoute permissions={['administration:roles:update']}>
+                    <ManageRole />
+                  </PermissionRoute>
+                ),
               },
             ],
           },

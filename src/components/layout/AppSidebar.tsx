@@ -1,12 +1,17 @@
 import { Layers, LogOut, Search, X } from 'lucide-react';
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { cn } from '../../utils/cn';
-import { useAppSelector } from '../../hooks/hooks';
-import { isLightColor } from '../../utils/themeUtils';
-import { menuItems, MenuItemType } from './menu-items-data';
-import { MenuItem } from './MenuItem';
 import { useLogOutMutation } from '../../features/auth/api/authApi';
+import { useAppSelector } from '../../hooks/hooks';
+import { cn } from '../../utils/cn';
+import { isLightColor } from '../../utils/themeUtils';
+import { MenuItem } from './MenuItem';
+import {
+  MenuItemType,
+  filterMenuItemsByPermission,
+  getActiveOpenMenus,
+  menuItems,
+} from './menu-items-data';
 
 interface AppSidebarProps {
   collapsed: boolean;
@@ -31,73 +36,61 @@ export interface MenuItemProps {
 
 const AppSidebar = ({ collapsed, setCollapsed, isMobile }: AppSidebarProps) => {
   const { sidebarColor, primaryColor, compactMode } = useAppSelector((state) => state.theme);
+  const permissions = useAppSelector((state) => state.auth.data?.permission);
   const isLightSidebar = isLightColor(sidebarColor);
-
   const height = compactMode ? 'h-14' : 'h-16';
 
   const navigate = useNavigate();
   const location = useLocation();
   const activeRoute = location.pathname;
 
-  const getOpenMenus = (path: string) => {
-    const shouldOpen: Record<string, boolean> = {};
-    const traverse = (items: MenuItemType[], parentKey = ''): boolean => {
-      let isBranchActive = false;
-      for (const item of items) {
-        const key = parentKey ? `${parentKey}-${item.label}` : item.label;
-        if (item.path === path) {
-          isBranchActive = true;
-        }
-        if (item.children) {
-          const isChildActive = traverse(item.children, key);
-          if (isChildActive) {
-            shouldOpen[key] = true;
-            isBranchActive = true;
-          }
-        }
-      }
-      return isBranchActive;
-    };
-    traverse(menuItems);
-    return shouldOpen;
-  };
-
-  const filterMenuItems = (items: MenuItemType[], query: string): MenuItemType[] => {
-    if (!query) return items;
-
-    return items.reduce<MenuItemType[]>((acc, item) => {
-      const matchesLabel = item.label.toLowerCase().includes(query.toLowerCase());
-
-      if (item.children) {
-        const filteredChildren = filterMenuItems(item.children, query);
-        if (filteredChildren.length > 0 || matchesLabel) {
-          acc.push({
-            ...item,
-            children: filteredChildren.length > 0 ? filteredChildren : item.children,
-          });
-        }
-      } else if (matchesLabel) {
-        acc.push(item);
-      }
-
-      return acc;
-    }, []);
-  };
-
-  const [openMenus, setOpenMenus] = useState<Record<string, boolean>>(() =>
-    getOpenMenus(activeRoute),
-  );
+  // 1. Filter by Permissions
+  const permissionFilteredItems = filterMenuItemsByPermission(menuItems, permissions);
 
   const [searchQuery, setSearchQuery] = useState('');
 
+  // 2. Filter by Search Query
+  const filterBySearch = (items: MenuItemType[], query: string): MenuItemType[] => {
+    if (!query) return items;
+    const lowerQuery = query.toLowerCase();
+
+    return items
+      .map((item) => {
+        const matchesLabel = item.label.toLowerCase().includes(lowerQuery);
+        let childrenMatch = false;
+        let filteredChildren: MenuItemType[] = [];
+
+        if (item.children) {
+          filteredChildren = filterBySearch(item.children, query);
+          if (filteredChildren.length > 0) childrenMatch = true;
+        }
+
+        if (matchesLabel || childrenMatch) {
+          return {
+            ...item,
+            children: filteredChildren.length > 0 ? filteredChildren : item.children,
+          };
+        }
+        return null;
+      })
+      .filter(Boolean) as MenuItemType[];
+  };
+
+  const finalMenuItems = filterBySearch(permissionFilteredItems, searchQuery);
+
+  const [openMenus, setOpenMenus] = useState<Record<string, boolean>>(() =>
+    getActiveOpenMenus(activeRoute, permissionFilteredItems),
+  );
+
+  // Auto-expand on search
   const getAllMenuKeys = (items: MenuItemType[], parentKey = '') => {
     const keys: Record<string, boolean> = {};
-    const traverse = (items: MenuItemType[], pKey = '') => {
-      for (const item of items) {
-        if (item.children && item.children.length > 0) {
-          const key = pKey ? `${pKey}-${item.label}` : item.label;
+    const traverse = (nodes: MenuItemType[], pKey = '') => {
+      for (const node of nodes) {
+        const key = pKey ? `${pKey}-${node.label}` : node.label;
+        if (node.children && node.children.length > 0) {
           keys[key] = true;
-          traverse(item.children, key);
+          traverse(node.children, key);
         }
       }
     };
@@ -110,23 +103,18 @@ const AppSidebar = ({ collapsed, setCollapsed, isMobile }: AppSidebarProps) => {
   if (searchQuery !== prevSearchQuery) {
     setPrevSearchQuery(searchQuery);
     if (searchQuery) {
-      const filteredItems = filterMenuItems(menuItems, searchQuery);
-      const allKeys = getAllMenuKeys(filteredItems);
-      setOpenMenus(allKeys);
+      setOpenMenus(getAllMenuKeys(finalMenuItems));
     } else {
-      setOpenMenus(getOpenMenus(activeRoute));
+      setOpenMenus(getActiveOpenMenus(activeRoute, permissionFilteredItems));
     }
   }
-  const [prevActiveRoute, setPrevActiveRoute] = useState(activeRoute);
 
+  const [prevActiveRoute, setPrevActiveRoute] = useState(activeRoute);
   if (activeRoute !== prevActiveRoute) {
     setPrevActiveRoute(activeRoute);
-    const newOpenMenus = getOpenMenus(activeRoute);
+    const newOpenMenus = getActiveOpenMenus(activeRoute, permissionFilteredItems);
     if (Object.keys(newOpenMenus).length > 0) {
-      setOpenMenus((prev) => {
-        const hasNewKeys = Object.keys(newOpenMenus).some((key) => !prev[key]);
-        return hasNewKeys ? { ...prev, ...newOpenMenus } : prev;
-      });
+      setOpenMenus((prev) => ({ ...prev, ...newOpenMenus }));
     }
   }
 
@@ -143,8 +131,6 @@ const AppSidebar = ({ collapsed, setCollapsed, isMobile }: AppSidebarProps) => {
       setCollapsed(true);
     }
   };
-
-  const filteredMenuItems = filterMenuItems(menuItems, searchQuery);
 
   const [logOut] = useLogOutMutation();
   const handleLogout = () => {
@@ -233,8 +219,8 @@ const AppSidebar = ({ collapsed, setCollapsed, isMobile }: AppSidebarProps) => {
 
       {/* Removed scrollbar-thin class to rely on global custom scrollbar styles from index.css */}
       <nav className='flex-1 overflow-y-auto py-2 hover:overflow-y-auto'>
-        {filteredMenuItems.length > 0
-          ? filteredMenuItems.map((item, idx) => (
+        {finalMenuItems.length > 0
+          ? finalMenuItems.map((item, idx) => (
               <MenuItem
                 key={idx}
                 item={item}
@@ -246,7 +232,7 @@ const AppSidebar = ({ collapsed, setCollapsed, isMobile }: AppSidebarProps) => {
                 primaryColor={primaryColor}
                 isLightSidebar={isLightSidebar}
                 compactMode={compactMode}
-                isLastChild={idx === filteredMenuItems.length - 1}
+                isLastChild={idx === finalMenuItems.length - 1}
               />
             ))
           : !collapsed && (

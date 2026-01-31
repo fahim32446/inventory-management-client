@@ -1,14 +1,14 @@
 import {
-  AccountBookOutlined,
   HighlightOutlined,
   LogoutOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   MoonOutlined,
   SunOutlined,
-  UserOutlined,
+  UserOutlined
 } from '@ant-design/icons';
 import { Avatar, Button, Drawer, Dropdown, Grid, Layout, MenuProps, Modal, Tooltip } from 'antd';
+import { StickyNote } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { QueryParamProvider } from 'use-query-params';
@@ -23,7 +23,7 @@ import { sidebarPalettes } from '../../utils/helper';
 import AnimatedOutlet from '../common/AnimatedOutlet';
 import DrawerConfig from '../common/DrawerConfig';
 import ModalConfig from '../common/ModalConfig';
-import StickyNotesManager from '../sticky-notes/StickyNotesManager';
+import { StickyNotesManager } from '../sticky-notes/sicky-notes-manager';
 import AppSidebar from './AppSidebar';
 
 const { Header, Sider, Content } = Layout;
@@ -153,14 +153,21 @@ export default function DashboardLayout() {
                 className='text-gray-500 dark:text-gray-400'
               />
             </Tooltip>
-            <Tooltip title='Sticky note'>
-              <Button
+           <Tooltip title='Sticky note'>
+              {/* <Button
                 type='text'
                 shape='circle'
-                icon={<AccountBookOutlined />}
+                icon={}
                 onClick={() => setIsStickyNotesOpen(true)}
                 className={isStickyNotesOpen ? 'text-blue-600 bg-blue-50 dark:bg-blue-900/20' : ''}
-              />
+              /> */}
+
+              <div className='p-1.5 rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer border'>
+                <StickyNote
+                  className='size-4.5 text-gray-500 dark:text-gray-400'
+                  onClick={() => setIsStickyNotesOpen(true)}
+                />
+              </div>
             </Tooltip>
             <Dropdown menu={{ items: userMenu }} trigger={['click']} placement='bottomRight'>
               <div className='flex items-center gap-3 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 p-2 rounded-lg transition-colors'>

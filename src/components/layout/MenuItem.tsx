@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom';
 import { cn } from '../../utils/cn';
 import { MenuItemProps } from './AppSidebar';
 import { hexToRgba } from '../../utils/helper';
+import { isAnyChildActive } from './menu-items-data';
 
 export const MenuItem = ({
   item,
@@ -24,18 +25,24 @@ export const MenuItem = ({
   const hasChildren = item.children && item.children.length > 0;
   const isExpanded = openMenus[key];
   const Icon = item.icon;
-  const isActive = activeRoute === item.path;
+
+  const isExactMatch = item.path === activeRoute;
+  const isPrefixMatch = item.path && item.path !== '/' && activeRoute.startsWith(item.path + '/');
+  const descendantActive = hasChildren && isAnyChildActive(item, activeRoute);
+
+  const isActive = isExactMatch || (isPrefixMatch && !descendantActive);
+  const isChildActive = !isActive && descendantActive;
   const itemRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
 
-  // Handle hover for collapsed state
+ 
   useEffect(() => {
     if (collapsed && isHovered && itemRef.current) {
       const rect = itemRef.current.getBoundingClientRect();
       setMenuPosition({
         top: rect.top,
-        left: rect.right + 8, // Add some gap
+        left: rect.right + 8,
       });
     }
   }, [collapsed, isHovered]);
@@ -49,12 +56,12 @@ export const MenuItem = ({
     }
     if (collapsed) {
       setIsHovered(true);
-      // Calculate position immediately on enter
+     
       if (itemRef.current) {
         const rect = itemRef.current.getBoundingClientRect();
         setMenuPosition({
           top: rect.top,
-          left: rect.right + 8, // Slightly closer gap
+          left: rect.right + 8,
         });
       }
     }
@@ -112,9 +119,13 @@ export const MenuItem = ({
           collapsed ? 'justify-center px-2' : 'justify-between',
           isActive
             ? 'text-white border-l-4'
-            : isLightSidebar
-              ? 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
-              : 'text-gray-400 hover:bg-gray-800/50 hover:text-white',
+            : isChildActive
+              ? isLightSidebar
+                ? 'text-gray-900 font-semibold'
+                : 'text-white font-semibold'
+              : isLightSidebar
+                ? 'text-gray-500 hover:bg-gray-100 hover:text-gray-900'
+                : 'text-gray-400 hover:bg-gray-800/50 hover:text-white',
         )}
         style={{
           paddingLeft: !collapsed && level > 0 ? `${1 + level * 1.5}rem` : undefined,
@@ -143,15 +154,19 @@ export const MenuItem = ({
                 'shrink-0 transition-colors duration-200',
                 isActive
                   ? ''
-                  : isLightSidebar
-                    ? 'text-gray-800 group-hover:text-gray-700'
-                    : 'text-gray-50 group-hover:text-white',
+                  : isChildActive
+                    ? isLightSidebar
+                      ? 'text-gray-900'
+                      : 'text-white'
+                    : isLightSidebar
+                      ? 'text-gray-500 group-hover:text-gray-700'
+                      : 'text-gray-400 group-hover:text-white',
               )}
               style={{ color: isActive ? primaryColor : undefined }}
             />
           )}
 
-          {/* {!collapsed && ( */}
+         
           <span
             className={cn(
               collapsed ? 'w-17.5 pl-1 text-xs!' : '',
@@ -159,15 +174,19 @@ export const MenuItem = ({
               'font-medium transition-colors duration-200 truncate',
               isActive
                 ? ''
-                : isLightSidebar
-                  ? 'text-gray-800 group-hover:text-gray-900'
-                  : 'text-gray-50 group-hover:text-white',
+                : isChildActive
+                  ? isLightSidebar
+                    ? 'text-gray-900'
+                    : 'text-white'
+                  : isLightSidebar
+                    ? 'text-gray-500 group-hover:text-gray-900'
+                    : 'text-gray-400 group-hover:text-white',
             )}
             style={{ color: isActive ? primaryColor : undefined }}
           >
             {item.label}
           </span>
-          {/* )} */}
+     
         </div>
 
         {!collapsed && hasChildren && (
@@ -264,7 +283,7 @@ export const MenuItem = ({
                       item={child}
                       level={0}
                       parentKey={key}
-                      collapsed={false} // Force expanded view in tooltip
+                      collapsed={false}
                       openMenus={openMenus}
                       activeRoute={activeRoute}
                       onToggle={onToggle}
