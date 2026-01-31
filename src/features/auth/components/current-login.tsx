@@ -66,7 +66,7 @@ const CurrentLogin: React.FC = () => {
     );
   }
 
-  const revokedCount = allSessions.filter((s) => s.is_revoked).length;
+
 
   return (
     <section className='p-6 space-y-8'>
