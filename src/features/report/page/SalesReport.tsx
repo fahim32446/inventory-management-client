@@ -1,22 +1,21 @@
-import type { TableColumnsType } from 'antd';
-import { useState } from 'react';
-import { useGetSalesReportQuery } from '../api/reportApiEndpoints';
-import type { ISalesReport } from '../report.interface';
-import usePagination from '../../../components/common/hooks/usePagination';
-import useUrlParams from '../../../components/common/hooks/useUrlParams';
-import { CheckBoxTable } from '../../../components/common/checkbox-table';
-
+import type { TableColumnsType } from "antd";
+import { useState } from "react";
+import { useGetSalesReportQuery } from "../api/reportApiEndpoints";
+import type { ISalesReport } from "../report.interface";
+import usePagination from "../../../components/common/hooks/usePagination";
+import useUrlParams from "../../../components/common/hooks/useUrlParams";
+import { CheckBoxTable } from "../../../components/common/checkbox-table";
 
 const SalesReport = () => {
   const [checkedList, setCheckedList] = useState<(keyof ISalesReport)[]>([
-    'key',
-    'customerName',
-    'saleDate',
-    'salesQuantity',
-    'salesUnitPrice',
-    'purchaseUnitCost',
-    'salesSubtotal',
-    'profitLoss',
+    "key",
+    "customerName",
+    "saleDate",
+    "salesQuantity",
+    "salesUnitPrice",
+    "purchaseUnitCost",
+    "salesSubtotal",
+    "profitLoss",
   ]);
 
   const { limit, offset, changePagination, pagination } = usePagination();
@@ -35,25 +34,28 @@ const SalesReport = () => {
 
   const column: TableColumnsType<ISalesReport & { key: React.Key }> = [
     {
-      title: 'SL.',
-      key: 'key',
-      dataIndex: 'key',
+      title: "SL.",
+      key: "key",
+      dataIndex: "key",
       render: (_, _data, index) => (
         <>{((pagination?.current || 1) - 1) * (pagination?.pageSize || 20) + 1 + index}</>
       ),
     },
-    { title: 'Name', key: 'customerName', dataIndex: 'customerName' },
-    { title: 'Sales Date', key: 'saleDate', dataIndex: 'saleDate' },
-    { title: 'Quantity', key: 'salesQuantity', dataIndex: 'salesQuantity' },
-    { title: 'Unit Price', key: 'salesUnitPrice', dataIndex: 'salesUnitPrice' },
-    { title: 'Purchase Unit Price', key: 'purchaseUnitCost', dataIndex: 'purchaseUnitCost' },
-    { title: 'Sales Subtotal', key: 'salesSubtotal', dataIndex: 'salesSubtotal' },
+    { title: "Name", key: "customerName", dataIndex: "customerName" },
+    { title: "Sales Date", key: "saleDate", dataIndex: "saleDate" },
+    { title: "Quantity", key: "salesQuantity", dataIndex: "salesQuantity" },
+    { title: "Unit Price", key: "salesUnitPrice", dataIndex: "salesUnitPrice" },
+    { title: "Purchase Unit Price", key: "purchaseUnitCost", dataIndex: "purchaseUnitCost" },
+    { title: "Sales Subtotal", key: "salesSubtotal", dataIndex: "salesSubtotal" },
     {
-      title: 'Profit/Loss',
-      key: 'profitLoss',
+      title: "Profit/Loss",
+      key: "profitLoss",
       render: (_, rec) => {
-        const totalPurchasePrice = rec.purchaseUnitCost * rec.salesQuantity;
-        const amount = rec.purchaseUnitCost - totalPurchasePrice;
+        const quantity = rec.salesQuantity;
+        const totalPurchasePrice = rec.purchaseUnitCost * quantity;
+        const totalSalesPrice = rec.salesUnitPrice * quantity;
+
+        const amount = totalSalesPrice - totalPurchasePrice;
         return amount > 0 ? `Profit: ${amount}` : `Loss: ${Math.abs(amount)}`;
       },
     },
@@ -68,8 +70,8 @@ const SalesReport = () => {
       data={dataWithKey}
       loading={isLoading || isFetching}
       refetch={refetch}
-      addUrl='/products/add'
-      buttonLabel='Add Product'
+      addUrl="/products/add"
+      buttonLabel="Add Product"
       count={data?.count}
     />
   );
