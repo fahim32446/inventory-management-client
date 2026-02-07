@@ -2,11 +2,14 @@ import { Button, Card, Col, Row, Table, Tag, Typography } from "antd";
 import { motion } from "framer-motion";
 import {
   ArrowDownRight,
+  ArrowRightLeft,
   ArrowUpRight,
+  DollarSign,
   Filter,
   MoreVertical,
   PieChart as PieChartIcon,
   TrendingUp,
+  Wallet,
 } from "lucide-react";
 import {
   Area,
@@ -37,6 +40,10 @@ const DashboardAccount = () => {
   const cashFlowData = data?.cashFlow;
   const revenueDistribution = data?.revenueDistribution || [];
   const recentTransactions = data?.recentTransactions || [];
+
+  const statsWithDefaults = Array.from({ length: 4 }, (_, i) => {
+    return stats?.[i] ?? null;
+  });
 
   const containerVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -113,6 +120,7 @@ const DashboardAccount = () => {
       render: () => <Button type="text" icon={<MoreVertical size={16} />} />,
     },
   ];
+  const icons = [<DollarSign />, <Wallet />, <TrendingUp />, <ArrowRightLeft />];
 
   return (
     <motion.div
@@ -125,7 +133,7 @@ const DashboardAccount = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <Title level={2} style={{ margin: 0 }}>
-            Accounts Analytics
+            Dashboard Analytics
           </Title>
           <Text type="secondary">Real-time overview of your financial performance</Text>
         </div>
@@ -146,34 +154,35 @@ const DashboardAccount = () => {
 
       {/* --- Stats Overview --- */}
       <Row gutter={[24, 24]}>
-        {stats?.map((stat, idx) => (
+        {statsWithDefaults?.map((stat, idx) => (
           <Col xs={24} sm={12} lg={6} key={idx}>
-            <motion.div variants={itemVariants}>
+            <div>
               <Card
                 bordered={false}
+                loading={isLoading}
                 className="shadow-xs hover:shadow-md transition-shadow duration-300 overflow-hidden dark:bg-slate-900"
               >
                 <div className="flex items-start justify-between">
                   <div className="space-y-2">
                     <Text type="secondary" className="text-xs font-medium uppercase tracking-wider">
-                      {stat.title}
+                      {stat?.title}
                     </Text>
                     <div className="flex items-baseline gap-2">
                       <Title level={3} style={{ margin: 0 }}>
-                        {stat.value}
+                        {stat?.value}
                       </Title>
                       <span
                         className={cn(
                           "text-xs font-semibold flex items-center gap-0.5",
-                          stat.isUp ? "text-emerald-500" : "text-rose-500",
+                          stat?.isUp ? "text-emerald-500" : "text-rose-500",
                         )}
                       >
-                        {stat.isUp ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}
-                        {stat.trend}
+                        {stat?.isUp ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}
+                        {stat?.trend}
                       </span>
                     </div>
                   </div>
-                  <div className={cn("p-3 rounded-xl", stat.color)}>{stat.icon}</div>
+                  <div className={cn("p-3 rounded-xl", stat?.color)}>{icons[idx]}</div>
                 </div>
                 <div className="mt-4 pt-4 border-t dark:border-slate-800">
                   <Text type="secondary" className="text-xs">
@@ -181,7 +190,7 @@ const DashboardAccount = () => {
                   </Text>
                 </div>
               </Card>
-            </motion.div>
+            </div>
           </Col>
         ))}
       </Row>
