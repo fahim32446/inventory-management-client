@@ -187,6 +187,7 @@ export default function LoginPage() {
                     { required: true, message: "Please enter your email" },
                     { type: "email" },
                   ]}
+                  initialValue={"azmir.ahx@gmail.com"}
                 >
                   <Input
                     prefix={<Mail size={18} className="text-slate-400 mr-2" />}
@@ -201,6 +202,7 @@ export default function LoginPage() {
                   }
                   name="password"
                   rules={[{ required: true, message: "Please enter your password" }]}
+                  initialValue={"12345678"}
                 >
                   <Input.Password
                     prefix={<Lock size={18} className="text-slate-400 mr-2" />}

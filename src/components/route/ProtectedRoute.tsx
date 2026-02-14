@@ -1,7 +1,7 @@
-import { Navigate } from 'react-router-dom';
+import { Navigate } from "react-router-dom";
 
-import type { RootState } from '../../redux/store';
-import { useAppSelector } from '../../hooks/hooks';
+import type { RootState } from "../../redux/store";
+import { useAppSelector } from "../../hooks/hooks";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -13,7 +13,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const isAuthenticated = !!accessToken && !!data;
 
   if (!isAuthenticated) {
-    return <Navigate to='/login' replace />;
+    return <Navigate to="/auth/login" replace />;
   }
 
   return <>{children}</>;

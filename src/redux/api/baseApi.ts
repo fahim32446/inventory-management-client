@@ -4,32 +4,32 @@ import {
   FetchArgs,
   fetchBaseQuery,
   FetchBaseQueryError,
-} from '@reduxjs/toolkit/query/react';
-import { message } from 'antd';
-import { authApi } from '../../features/auth/api/authApi';
-import { baseUrl } from '../../utils/request';
-import { logout, setAuth } from '../slice/authSlice';
-import { RootState } from '../store';
+} from "@reduxjs/toolkit/query/react";
+import { message } from "antd";
+import { authApi } from "../../features/auth/api/authApi";
+import { baseUrl } from "../../utils/request";
+import { logout, setAuth } from "../slice/authSlice";
+import { RootState } from "../store";
 
-import { Mutex } from 'async-mutex';
-import { ILoginResponse } from '../../features/auth/auth.interface';
+import { Mutex } from "async-mutex";
+import { ILoginResponse } from "../../features/auth/auth.interface";
 
 const mutex = new Mutex();
 
 const isAuthEndpoint = (url?: string) =>
-  url?.includes('/public/auth/login') ||
-  url?.includes('/auth/refresh') ||
-  url?.includes('/public/auth/logout');
+  url?.includes("/public/auth/login") ||
+  url?.includes("/auth/refresh") ||
+  url?.includes("/public/auth/logout");
 
 const baseQuery = fetchBaseQuery({
   baseUrl: baseUrl,
-  credentials: 'include',
+  credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     const state = getState() as RootState;
     const token = state.auth?.accessToken;
 
     if (token) {
-      headers.set('Authorization', `Bearer ${token}`);
+      headers.set("Authorization", `Bearer ${token}`);
     }
 
     return headers;
@@ -45,13 +45,13 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
   await mutex.waitForUnlock();
   let result = await baseQuery(args, api, extraOptions);
 
-  const url = typeof args === 'string' ? args : args.url;
+  const url = typeof args === "string" ? args : args.url;
   const method = (result?.meta as any)?.request?.method;
   const res_message = (result?.data as any)?.message;
   const errorMsg = (result?.error as any)?.data?.message;
 
   // Global success message for non-GET requests
-  if (result?.data && method !== 'GET' && method !== 'HEAD' && !isAuthEndpoint(url)) {
+  if (result?.data && method !== "GET" && method !== "HEAD" && !isAuthEndpoint(url)) {
     if (res_message) {
       message.success(res_message);
     }
@@ -73,8 +73,8 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
         if (refreshToken) {
           const refreshResult = await baseQuery(
             {
-              url: '/public/auth/refresh-token',
-              method: 'GET',
+              url: "/public/auth/refresh-token",
+              method: "GET",
             },
             api,
             extraOptions,
@@ -86,7 +86,7 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
             // store the new token
             api.dispatch(
               setAuth({
-                data: data?.data,
+                // data: data?.data,
                 message: data?.message,
                 success: data?.success,
                 accessToken: data?.accessToken,
@@ -127,17 +127,17 @@ export const baseApi = createApi({
 
   endpoints: () => ({}),
   tagTypes: [
-    'USER',
-    'SESSIONS',
-    'EMPLOYEE',
-    'PRODUCT',
-    'CATEGORY',
-    'WAREHOUSE',
-    'SUPPLIER',
-    'PURCHASE',
-    'SALES',
-    'USER',
-    'ROLE',
-    'ADMINISTRATION',
+    "USER",
+    "SESSIONS",
+    "EMPLOYEE",
+    "PRODUCT",
+    "CATEGORY",
+    "WAREHOUSE",
+    "SUPPLIER",
+    "PURCHASE",
+    "SALES",
+    "USER",
+    "ROLE",
+    "ADMINISTRATION",
   ],
 });
