@@ -4,6 +4,7 @@ import {
   FetchArgs,
   fetchBaseQuery,
   FetchBaseQueryError,
+  retry,
 } from "@reduxjs/toolkit/query/react";
 import { message } from "antd";
 import { authApi } from "../../features/auth/api/authApi";
@@ -24,6 +25,7 @@ const isAuthEndpoint = (url?: string) =>
 const baseQuery = fetchBaseQuery({
   baseUrl: baseUrl,
   credentials: "include",
+  timeout: 30000,
   prepareHeaders: (headers, { getState }) => {
     const state = getState() as RootState;
     const token = state.auth?.accessToken;
@@ -121,8 +123,12 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
   return result;
 };
 
+const baseQueryWithRetry = retry(baseQueryWithReauth, {
+  maxRetries: 3,
+});
+
 export const baseApi = createApi({
-  baseQuery: baseQueryWithReauth,
+  baseQuery: baseQueryWithRetry,
   refetchOnFocus: true,
 
   endpoints: () => ({}),
