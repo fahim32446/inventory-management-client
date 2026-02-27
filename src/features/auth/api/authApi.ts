@@ -1,6 +1,6 @@
-import { HTTPResponse } from '../../../components/common/type';
-import { baseApi } from '../../../redux/api/baseApi';
-import { logout, setAuth, setProfileData } from '../../../redux/slice/authSlice';
+import { HTTPResponse } from "../../../components/common/type";
+import { baseApi } from "../../../redux/api/baseApi";
+import { logout, setAuth, setProfileData } from "../../../redux/slice/authSlice";
 import {
   IChangePasswordBody,
   ICurrentLogin,
@@ -13,20 +13,21 @@ import {
   ISendEmailVerificationBody,
   IToggle2FABody,
   IUpdateProfileBody,
-} from '../auth.interface';
+} from "../auth.interface";
 
 export const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     login: builder.mutation<ILoginResponse, ILoginBody>({
       query: (body) => {
         return {
-          url: '/public/auth/login',
-          method: 'POST',
+          url: "/public/auth/login",
+          method: "POST",
           body,
-          credentials: 'include',
+          credentials: "include",
+          retry: 3,
         };
       },
-      invalidatesTags: ['USER'],
+      invalidatesTags: ["USER"],
       async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
@@ -43,22 +44,22 @@ export const authApi = baseApi.injectEndpoints({
           }
 
           if (data?.data?.two_fa) {
-            console.log('Two-factor auth required');
+            console.log("Two-factor auth required");
           }
         } catch (err) {
-          console.error('Login failed:', err);
+          console.error("Login failed:", err);
         }
       },
     }),
     refreshToken: builder.query<ILoginResponse, void>({
       query: (body) => {
         return {
-          url: '/public/auth/refresh-token',
-          method: 'GET',
+          url: "/public/auth/refresh-token",
+          method: "GET",
           body,
         };
       },
-      providesTags: ['USER'],
+      providesTags: ["USER"],
       async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
@@ -68,10 +69,10 @@ export const authApi = baseApi.injectEndpoints({
           }
 
           if (data?.data?.two_fa) {
-            console.log('Two-factor auth required');
+            console.log("Two-factor auth required");
           }
         } catch (err) {
-          console.error('Login failed:', err);
+          console.error("Login failed:", err);
         }
       },
     }),
@@ -79,13 +80,13 @@ export const authApi = baseApi.injectEndpoints({
     login2FA: builder.mutation<ILoginResponse, ILoginBody>({
       query: (body) => {
         return {
-          url: '/public/auth/login/2fa',
-          method: 'POST',
+          url: "/public/auth/login/2fa",
+          method: "POST",
           body,
-          credentials: 'include',
+          credentials: "include",
         };
       },
-      invalidatesTags: ['USER'],
+      invalidatesTags: ["USER"],
       async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
@@ -95,10 +96,10 @@ export const authApi = baseApi.injectEndpoints({
           }
 
           if (data?.data?.two_fa) {
-            console.log('Two-factor auth required');
+            console.log("Two-factor auth required");
           }
         } catch (err) {
-          console.error('Login failed:', err);
+          console.error("Login failed:", err);
         }
       },
     }),
@@ -106,28 +107,28 @@ export const authApi = baseApi.injectEndpoints({
     logOut: builder.mutation<HTTPResponse<void>, void>({
       query: () => {
         return {
-          url: '/public/auth/logout',
-          method: 'POST',
+          url: "/public/auth/logout",
+          method: "POST",
         };
       },
-      invalidatesTags: ['USER'],
+      invalidatesTags: ["USER"],
       async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
 
           if (data?.success) {
             dispatch(logout());
-            localStorage.removeItem('persist:360_erp_admin');
+            localStorage.removeItem("persist:360_erp_admin");
             dispatch(baseApi.util.resetApiState());
           }
         } catch (err) {
           dispatch(logout());
-          localStorage.removeItem('persist:360_erp_admin');
+          localStorage.removeItem("persist:360_erp_admin");
           dispatch(baseApi.util.resetApiState());
-          console.error('Login failed:', err);
+          console.error("Login failed:", err);
         } finally {
           dispatch(logout());
-          localStorage.removeItem('persist:360_erp_admin');
+          localStorage.removeItem("persist:360_erp_admin");
           dispatch(baseApi.util.resetApiState());
         }
       },
@@ -139,38 +140,38 @@ export const authApi = baseApi.injectEndpoints({
     >({
       query: (body) => {
         return {
-          url: '/public/auth/email-otp/send',
-          method: 'POST',
+          url: "/public/auth/email-otp/send",
+          method: "POST",
           body,
         };
       },
-      invalidatesTags: ['USER'],
+      invalidatesTags: ["USER"],
     }),
     matchOptVerification: builder.mutation<IMatchOTPResponse, IMatchOTPVerificationBody>({
       query: (body) => {
         return {
-          url: '/public/auth/email-otp/match',
-          method: 'POST',
+          url: "/public/auth/email-otp/match",
+          method: "POST",
           body,
         };
       },
-      invalidatesTags: ['USER'],
+      invalidatesTags: ["USER"],
     }),
     resetPassword: builder.mutation<HTTPResponse<void>, IResetPasswordBody>({
       query: (body) => {
         return {
-          url: '/public/auth/reset-password',
-          method: 'POST',
+          url: "/public/auth/reset-password",
+          method: "POST",
           body,
         };
       },
-      invalidatesTags: ['USER'],
+      invalidatesTags: ["USER"],
     }),
     getProfile: builder.query<IProfileDataResponse, void>({
       query: () => {
         return {
-          url: '/admin/profile',
-          method: 'GET',
+          url: "/admin/profile",
+          method: "GET",
         };
       },
       async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
@@ -182,58 +183,58 @@ export const authApi = baseApi.injectEndpoints({
           }
 
           if (data?.data?.two_fa) {
-            console.log('Two-factor auth required');
+            console.log("Two-factor auth required");
           }
         } catch (_err) {
-          console.error('Profile failed:');
+          console.error("Profile failed:");
         }
       },
-      providesTags: ['USER'],
+      providesTags: ["USER"],
     }),
     updateProfile: builder.mutation<HTTPResponse<void>, IUpdateProfileBody>({
       query: (body) => ({
-        url: '/admin/profile',
-        method: 'PATCH',
+        url: "/admin/profile",
+        method: "PATCH",
         body,
       }),
-      invalidatesTags: ['USER'],
+      invalidatesTags: ["USER"],
     }),
     changePassword: builder.mutation<HTTPResponse<void>, IChangePasswordBody>({
       query: (body) => ({
-        url: '/admin/profile/change-password',
-        method: 'POST',
+        url: "/admin/profile/change-password",
+        method: "POST",
         body,
       }),
     }),
     toggle2FA: builder.mutation<HTTPResponse<void>, IToggle2FABody>({
       query: (body) => ({
-        url: '/admin/profile',
-        method: 'PATCH',
+        url: "/admin/profile",
+        method: "PATCH",
         body,
-        credentials: 'include',
+        credentials: "include",
       }),
-      invalidatesTags: ['USER'],
+      invalidatesTags: ["USER"],
     }),
     getCurrentLogin: builder.query<HTTPResponse<ICurrentLogin[]>, void>({
       query: () => ({
-        url: '/admin/profile/sessions',
-        method: 'GET',
+        url: "/admin/profile/sessions",
+        method: "GET",
       }),
-      providesTags: ['SESSIONS'],
+      providesTags: ["SESSIONS"],
     }),
     revokeSession: builder.mutation<HTTPResponse<void>, { sessionId: string }>({
       query: (body) => ({
         url: `/admin/profile/sessions/${body.sessionId}`,
-        method: 'DELETE',
+        method: "DELETE",
       }),
-      invalidatesTags: ['SESSIONS'],
+      invalidatesTags: ["SESSIONS"],
     }),
     revokeAllSessions: builder.mutation<HTTPResponse<void>, void>({
       query: () => ({
-        url: '/admin/profile/sessions',
-        method: 'DELETE',
+        url: "/admin/profile/sessions",
+        method: "DELETE",
       }),
-      invalidatesTags: ['SESSIONS'],
+      invalidatesTags: ["SESSIONS"],
     }),
   }),
 });

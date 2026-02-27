@@ -1,6 +1,9 @@
 import { Button, Flex, Form, Row } from 'antd';
 import { useForm } from 'antd/es/form/Form';
-import { CommonPasswordInput, CommonTextInput } from '../../../components/common/input-items/input-item';
+import {
+  CommonPasswordInput,
+  CommonTextInput,
+} from '../../../components/common/input-items/input-item';
 import SelectRole from '../../../components/common/select/select-role';
 import type { IUser } from '../administration.interface';
 import { useCreateUserMutation, useUpdateUserMutation } from '../api/usersApiEndpoints';
@@ -82,7 +85,7 @@ const ManageUser = ({ data }: Props) => {
           formItemProps={{
             rules: [
               {
-                required: true,
+                required: data ? false : true,
                 message: 'Please input your password!',
               },
             ],
