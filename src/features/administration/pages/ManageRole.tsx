@@ -25,7 +25,7 @@ interface RoleFormProps {
 const RoleForm = ({ initialRole, permissions, roleId }: RoleFormProps) => {
   const navigate = useNavigate();
   const [checkedIds, setCheckedIds] = useState<number[]>(
-    initialRole?.permissions.map((item) => item.permissionId) || []
+    initialRole?.permissions.map((item) => item.permissionId) || [],
   );
   const [roleName, setRoleName] = useState<string>(initialRole?.name || '');
 
@@ -40,7 +40,7 @@ const RoleForm = ({ initialRole, permissions, roleId }: RoleFormProps) => {
 
   const onChange = (id: number): void => {
     setCheckedIds((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id],
     );
   };
 
@@ -99,7 +99,8 @@ const RoleForm = ({ initialRole, permissions, roleId }: RoleFormProps) => {
         <Button
           loading={isCreating || isUpdating}
           type='primary'
-          icon={<SaveFilled />}
+          size='small'
+          icon={<SaveFilled className='size-3' />}
           onClick={handleSubmit}
         >
           Save Changes
@@ -194,7 +195,7 @@ const ManageRole = () => {
 
   const { data: res, isLoading: isRoleDetailsLoading } = useGetRoleDetailsQuery(
     { roleId: roleId },
-    { skip: !roleId }
+    { skip: !roleId },
   );
   const roleDetails = res?.result;
 
